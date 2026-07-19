@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install optional dependencies
+        run: pip install pyyaml
+
+      - name: Run tests
+        run: python3 -m unittest discover tests -v
+
+      - name: Run tests without site packages
+        run: python3 -S -m unittest discover tests -v
+
+      - name: Run ip-check fixture smoke test
+        run: |
+          set +e
+          python3 scripts/ip-check.py tests/fixtures/sample-workspace 3
+          exit_code=$?
+          set -e
+          if [ "$exit_code" -ne 2 ]; then
+            echo "Expected ip-check fixture to exit 2, got $exit_code"
+            exit 1
+          fi
+
+      - name: Compile ip-check script
+        run: python3 -m py_compile scripts/ip-check.py

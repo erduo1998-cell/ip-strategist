@@ -1,0 +1,35 @@
+# 内部文件，不随 skill 公开
+# 注意：只忽略下列两个精确路径。其余文件（含 references/定位锚点-示例.md
+# 这个脱敏的公开示例、CHANGELOG.md、CONTRIBUTING.md、TROUBLESHOOTING.md、
+# docs/ 等）都是公开的，不得加入忽略。
+
+# 方法论整理规范：记录内部来源、隐私与发布自检规则，仅本地维护用
+SPEC.md
+
+# 耳总私人 IP 定位实例（打法牌 + 本地知识库路径），不公开
+# 仅此精确文件被忽略；references/定位锚点-示例.md 是脱敏公开版，必须保留
+references/耳总IP定位锚点.md
+
+# 测试与 CI 临时文件
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.venv/
+venv/
+env/
+
+# 创作者敏感数据（建议默认忽略，按需自行决定是否注释掉）
+ip-dossier.md
+ip-dossier.md.bak
+ip-dossier.md.tmp
+ip-contracts/
+
+# 例外：集成测试 fixture 需要提交到仓库
+!tests/fixtures/sample-workspace/ip-dossier.md
+!tests/fixtures/sample-workspace/ip-contracts/
+!tests/fixtures/sample-workspace/ip-contracts/**
