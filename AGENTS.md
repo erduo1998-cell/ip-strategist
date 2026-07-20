@@ -11,6 +11,7 @@
 
 ## 2. 状态模型
 
+- 建档状态只用 `in_progress`、`provisional`、`confirmed`；断点只用 `goal`、`evidence`、`audience`、`value`、`business`、`execution`。文件存在不代表核心字段齐全，`in_progress` 必须续访，`provisional` 表示可执行但仍待数据验证。
 - 契约 YAML frontmatter 是生命周期状态唯一可信源；`ip-dossier.md` 的契约索引是派生只读视图。
 - 当前状态枚举：`待发布`、`待复盘`、`已复盘`、`已废弃`。
 - 当前 7 个机器字段：`contract_id`、`status`、`sign_date`、`plan_publish_date`、`actual_publish_date`、`review_after_days`、`next_review_date`。

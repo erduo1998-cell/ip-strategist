@@ -48,12 +48,48 @@ class TestIpCheck(unittest.TestCase):
             f.write(body)
         return path
 
-    def _write_dossier(self, schema_version="1.8", index_rows=None):
+    def _write_dossier(
+        self,
+        schema_version="1.9",
+        index_rows=None,
+        onboarding_status="confirmed",
+        onboarding_step="execution",
+        core_overrides=None,
+        include_evidence_row=True,
+    ):
         """写入 ip-dossier.md。index_rows 是 [(cid, title, status, next_review_date)]。"""
+        core_fields = {
+            "为什么现在做 IP": "业务转型需要建立稳定信任",
+            "90 天唯一主要目标": "获得 10 个精准咨询线索",
+            "成功标准": "90 天内有 10 个目标用户主动咨询",
+            "目标用户的具体状态": "已经尝试但项目无法落地的小团队负责人",
+            "用户的核心问题": "不知道如何把方法变成可执行流程",
+            "信任依据": "已完成三个同类项目并有脱敏产物",
+            "当前价值": "给出一个当天能执行的拆解动作",
+            "未来价值": "持续获得从判断到复盘的落地方法",
+            "当前主行为": "私信咨询",
+            "变现方向或长期用途": "企业顾问服务",
+            "每周执行资源": "每周 6 小时，一人出镜与剪辑",
+            "人设 / 伦理 / 隐私红线": "不编造案例，不暴露客户身份，不承诺收益",
+            "当前最大未知": "用户是否愿意为诊断付费；用首批 5 次咨询验证",
+        }
+        if core_overrides:
+            core_fields.update(core_overrides)
         path = os.path.join(self.workdir, "ip-dossier.md")
         with open(path, "w", encoding="utf-8") as f:
-            f.write("---\nschema_version: %s\n---\n\n" % schema_version)
+            f.write("---\nschema_version: %s\n" % schema_version)
+            f.write("onboarding_status: %s\n" % onboarding_status)
+            f.write("onboarding_step: %s\n---\n\n" % onboarding_step)
             f.write("# 创作者档案 · Dossier\n\n")
+            f.write("## 一、底座区\n\n")
+            for label, value in core_fields.items():
+                f.write("**%s**：%s\n\n" % (label, value))
+            f.write("### 依据账本（事实 / 假设 / 未知分开）\n\n")
+            f.write("| 结论 | 状态（已确认事实 / 暂定假设 / 未知） | 依据 | 下一步验证 |\n")
+            f.write("|---|---|---|---|\n")
+            if include_evidence_row:
+                f.write("| 用户有落地需求 | 已确认事实 | 三次同类求助 | 下一批内容评论与私信 |\n")
+            f.write("\n")
             f.write("## 二、契约索引区\n\n")
             f.write("| 编号 | 选题 | 状态 | 下次复盘日 |\n")
             f.write("|------|------|------|----------|\n")
@@ -640,6 +676,72 @@ class TestIpCheck(unittest.TestCase):
         self.assertEqual(exit_code, 2)
         self.assertEqual(ip_check.read_text(dossier_path), before)
         self.assertFalse(os.path.exists(dossier_path + ".bak"))
+
+    def test_in_progress_onboarding_is_not_treated_as_complete(self):
+        """in_progress 允许缺字段，但必须明确提醒按断点续访。"""
+        self._write_dossier(
+            onboarding_status="in_progress",
+            onboarding_step="audience",
+            core_overrides={"目标用户的具体状态": "[待诊断]"},
+            include_evidence_row=False,
+        )
+        problems, stats = ip_check.run_checks(self.workdir, overdue_days=3)
+        self.assertEqual(stats["onboarding_status"], "in_progress")
+        self.assertEqual(stats["onboarding_step"], "audience")
+        self.assertTrue(self._has_message(problems, "建档诊断进行中"))
+        self.assertTrue(self._has_message(problems, "audience"))
+        self.assertNotIn("错误", self._problem_kinds(problems))
+
+    def test_provisional_missing_core_field_is_error(self):
+        """provisional 缺任一核心字段不得被误判为完整档案。"""
+        self._write_dossier(
+            onboarding_status="provisional",
+            onboarding_step="execution",
+            core_overrides={"90 天唯一主要目标": "[待诊断]"},
+        )
+        problems, _ = ip_check.run_checks(self.workdir, overdue_days=3)
+        self.assertIn("错误", self._problem_kinds(problems))
+        self.assertTrue(self._has_message(problems, "90 天唯一主要目标"))
+
+    def test_provisional_without_evidence_ledger_is_error(self):
+        """完整档案必须区分事实/假设/未知，并保留依据与验证动作。"""
+        self._write_dossier(
+            onboarding_status="provisional",
+            onboarding_step="execution",
+            include_evidence_row=False,
+        )
+        problems, _ = ip_check.run_checks(self.workdir, overdue_days=3)
+        self.assertIn("错误", self._problem_kinds(problems))
+        self.assertTrue(self._has_message(problems, "建档依据账本缺失"))
+
+    def test_confirmed_complete_onboarding_passes(self):
+        """confirmed + 全部核心字段 + 依据账本应通过。"""
+        self._write_dossier(
+            onboarding_status="confirmed",
+            onboarding_step="execution",
+        )
+        problems, stats = ip_check.run_checks(self.workdir, overdue_days=3)
+        self.assertEqual(stats["onboarding_status"], "confirmed")
+        self.assertEqual(problems, [])
+
+    def test_invalid_onboarding_state_and_step_are_errors(self):
+        """建档状态与断点都使用封闭枚举。"""
+        self._write_dossier(
+            onboarding_status="done",
+            onboarding_step="finished",
+        )
+        problems, _ = ip_check.run_checks(self.workdir, overdue_days=3)
+        self.assertTrue(self._has_message(problems, "建档状态非法"))
+        self.assertTrue(self._has_message(problems, "建档断点非法"))
+
+    def test_provisional_requires_execution_as_last_completed_step(self):
+        """provisional 表示六模块完成，断点必须留在 execution。"""
+        self._write_dossier(
+            onboarding_status="provisional",
+            onboarding_step="value",
+        )
+        problems, _ = ip_check.run_checks(self.workdir, overdue_days=3)
+        self.assertTrue(self._has_message(problems, "建档状态与断点冲突"))
 
 
 if __name__ == "__main__":

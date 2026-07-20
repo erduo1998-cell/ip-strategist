@@ -5,7 +5,8 @@
   1. 契约状态一致性：过期待复盘、疑似漏回填实际发布日、状态非法值、
      状态-日期字段联动违规（含 已废弃 终态识别）。
   2. 档案 schema_version 与模板是否一致。
-  3. 契约索引区（ip-dossier.md 里的只读表）与 ip-contracts/ 实际契约是否脱节。
+  3. 建档诊断状态/断点是否合法，已完成档案的核心字段是否齐全。
+  4. 契约索引区（ip-dossier.md 里的只读表）与 ip-contracts/ 实际契约是否脱节。
 
 零依赖原则：仅使用 Python3 标准库。PyYAML 是可选增强，若已安装则 frontmatter
 解析更健壮（支持值内 `#`、多行字符串、YAML 列表）；未安装时回退手写解析器。
@@ -36,6 +37,28 @@ import sys
 import tempfile
 
 VALID_STATUS = ("待发布", "待复盘", "已复盘", "已废弃")
+VALID_ONBOARDING_STATUS = ("in_progress", "provisional", "confirmed")
+VALID_ONBOARDING_STEPS = (
+    "goal", "evidence", "audience", "value", "business", "execution"
+)
+
+# v1.9 首次建档的最低可执行字段。标签与 dossier-template 一致，
+# 便于在不引入额外 schema 依赖的情况下做确定性检查。
+ONBOARDING_REQUIRED_FIELDS = (
+    "为什么现在做 IP",
+    "90 天唯一主要目标",
+    "成功标准",
+    "目标用户的具体状态",
+    "用户的核心问题",
+    "信任依据",
+    "当前价值",
+    "未来价值",
+    "当前主行为",
+    "变现方向或长期用途",
+    "每周执行资源",
+    "人设 / 伦理 / 隐私红线",
+    "当前最大未知",
+)
 
 # 兼容旧模板/旧档案里可能写的别名，机器内部统一用 canonical 状态值。
 STATUS_ALIASES = {
@@ -201,7 +224,10 @@ def is_placeholder(v):
     if not v:
         return True
     # 中文破折号、双横线、单横线、留空占位
-    if v in ("—", "--", "-", "待填", "留空"):
+    if v in ("—", "--", "-", "待填", "待诊断", "留空", "待定", "未知", "TBD"):
+        return True
+    unwrapped = v.strip("[]【】 ")
+    if unwrapped in ("待填", "待诊断", "留空", "待定", "未知", "TBD"):
         return True
     return v.startswith("YYYY") or v.startswith("C-YYYYMMDD")
 
@@ -322,6 +348,50 @@ def parse_schema_version(text):
         return fm["schema_version"]
     m = re.search(r"schema_version[：:\s]*\"?'?([0-9.]+)'?\"?", text or "")
     return m.group(1) if m else ""
+
+
+def parse_markdown_bold_field(text, label):
+    """读取 `**字段**：值` 的单行值；找不到返回空字符串。"""
+    if not text:
+        return ""
+    pattern = r"^\*\*%s\*\*[\uff1a:]\s*(.*)$" % re.escape(label)
+    match = re.search(pattern, text, flags=re.MULTILINE)
+    return match.group(1).strip() if match else ""
+
+
+def onboarding_missing_fields(text):
+    """返回 v1.9 首次建档核心字段中缺失或仍为占位符的项。"""
+    missing = []
+    for label in ONBOARDING_REQUIRED_FIELDS:
+        value = parse_markdown_bold_field(text, label)
+        if is_placeholder(value):
+            missing.append(label)
+    return missing
+
+
+def has_onboarding_evidence_row(text):
+    """依据账本至少有一条非空结论，且标明状态、依据与验证。"""
+    if not text or "### 依据账本" not in text:
+        return False
+    in_section = False
+    for line in text.splitlines():
+        if line.startswith("### 依据账本"):
+            in_section = True
+            continue
+        if in_section and line.startswith("### "):
+            break
+        if not in_section or not line.strip().startswith("|"):
+            continue
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if len(cells) < 4:
+            continue
+        if cells[0] in ("结论", "") or set(cells[0]) <= set("-: "):
+            continue
+        if cells[1] not in ("已确认事实", "暂定假设", "未知"):
+            continue
+        if all(not is_placeholder(cell) for cell in (cells[0], cells[2], cells[3])):
+            return True
+    return False
 
 
 def parse_dossier_index(text):
@@ -624,16 +694,54 @@ def run_checks(workdir, overdue_days, skill_dir=None):
 
     # ---- schema_version 比对 ----
     schema_warn = None
+    dossier_schema_version = ""
     dossier_text = read_text(dossier_path)
+    if dossier_text is not None:
+        dossier_schema_version = parse_schema_version(dossier_text)
     if template_dossier:
         tpl_text = read_text(template_dossier)
         if dossier_text is not None and tpl_text is not None:
-            d_ver = parse_schema_version(dossier_text)
+            d_ver = dossier_schema_version
             t_ver = parse_schema_version(tpl_text)
             if d_ver and t_ver and d_ver != t_ver:
                 schema_warn = (d_ver, t_ver, template_dossier)
     else:
         problems.append(("提醒", "未找到 templates/dossier-template.md，schema_version 检查跳过"))
+
+    # ---- v1.9 建档诊断状态与完成门槛 ----
+    onboarding_status = ""
+    onboarding_step = ""
+    onboarding_missing = []
+    if dossier_text is not None and dossier_schema_version == "1.9":
+        dossier_fm, dossier_fm_error = parse_frontmatter(dossier_text)
+        if dossier_fm_error:
+            problems.append(("错误", "dossier frontmatter 解析失败：%s" % dossier_fm_error))
+        onboarding_status = dossier_fm.get("onboarding_status", "").strip()
+        onboarding_step = dossier_fm.get("onboarding_step", "").strip()
+
+        if onboarding_status not in VALID_ONBOARDING_STATUS:
+            problems.append(("错误", "建档状态非法：onboarding_status=%r（合法值：in_progress / provisional / confirmed）"
+                             % onboarding_status))
+        if onboarding_step not in VALID_ONBOARDING_STEPS:
+            problems.append(("错误", "建档断点非法：onboarding_step=%r（合法值：goal / evidence / audience / value / business / execution）"
+                             % onboarding_step))
+
+        if onboarding_status == "in_progress":
+            problems.append(("提醒", "建档诊断进行中：档案尚未完成，下次从 %s 模块续访"
+                             % (onboarding_step or "未记录断点")))
+        elif onboarding_status in ("provisional", "confirmed"):
+            onboarding_missing = onboarding_missing_fields(dossier_text)
+            if onboarding_step != "execution":
+                problems.append(("错误", "建档状态与断点冲突：%s 必须在六模块完成后保留 onboarding_step=execution"
+                                 % onboarding_status))
+            for field in onboarding_missing:
+                problems.append(("错误", "建档核心字段缺失：%s 档案中“%s”未填或仍为占位值"
+                                 % (onboarding_status, field)))
+            if not has_onboarding_evidence_row(dossier_text):
+                problems.append(("错误", "建档依据账本缺失：%s 档案至少需一条“已确认事实 / 暂定假设 / 未知”记录，且写明依据与下一步验证"
+                                 % onboarding_status))
+            if onboarding_status == "provisional" and not onboarding_missing:
+                problems.append(("提醒", "当前是 provisional v0.1 暂定档案：可进入首批内容与契约验证，不得当作最终定位"))
 
     # ---- 契约索引区比对 ----
     index_mismatches = []
@@ -727,6 +835,9 @@ def run_checks(workdir, overdue_days, skill_dir=None):
         "has_dossier": dossier_text is not None,
         "has_contracts_dir": os.path.isdir(contracts_dir),
         "template_dossier": template_dossier,
+        "onboarding_status": onboarding_status,
+        "onboarding_step": onboarding_step,
+        "onboarding_missing": onboarding_missing,
     }
 
 
@@ -743,6 +854,9 @@ def print_report(problems, stats, workdir, overdue_days):
         print("\n[提示] 未找到 ip-dossier.md（schema 与索引检查跳过）。")
     if not stats["has_contracts_dir"]:
         print("\n[提示] 未找到 ip-contracts/ 目录（契约检查跳过）。")
+    if stats.get("onboarding_status"):
+        print("\n建档诊断：%s（当前断点：%s）"
+              % (stats["onboarding_status"], stats.get("onboarding_step") or "未记录"))
 
     print("\n契约数量：%d 份" % stats["contracts"])
     if stats.get("abandoned_count"):

@@ -25,8 +25,8 @@ class TestGrowthStructure(unittest.TestCase):
 
     def test_skill_routes_growth_tasks_without_loading_ten_for_everything(self):
         text = read("SKILL.md")
-        self.assertIn('version: "1.8.0"', text)
-        self.assertIn("十一个维度文件（00-10）", text)
+        self.assertIn('version: "1.9.0"', text)
+        self.assertIn("十二个维度文件（00-11）", text)
         self.assertIn("起号增长 / 播放不转粉 / 爆款系列", text)
         self.assertIn("references/10-增长与系列.md", text)
         self.assertNotIn("任何任务都要读取 10", text)
@@ -61,7 +61,7 @@ class TestGrowthStructure(unittest.TestCase):
     def test_dossier_and_weekly_plan_expose_growth_state(self):
         dossier = read("templates/dossier-template.md")
         weekly = read("templates/weekly-plan-template.md")
-        self.assertIn("schema_version: 1.8", dossier)
+        self.assertIn("schema_version: 1.9", dossier)
         self.assertIn("### 账号记忆资产", dossier)
         self.assertIn("### 系列资产", dossier)
         self.assertIn("### 可选增长快照", dossier)
