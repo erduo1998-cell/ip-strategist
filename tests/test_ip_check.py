@@ -48,7 +48,7 @@ class TestIpCheck(unittest.TestCase):
             f.write(body)
         return path
 
-    def _write_dossier(self, schema_version="1.7", index_rows=None):
+    def _write_dossier(self, schema_version="1.8", index_rows=None):
         """写入 ip-dossier.md。index_rows 是 [(cid, title, status, next_review_date)]。"""
         path = os.path.join(self.workdir, "ip-dossier.md")
         with open(path, "w", encoding="utf-8") as f:
