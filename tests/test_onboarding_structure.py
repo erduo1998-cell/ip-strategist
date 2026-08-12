@@ -23,22 +23,37 @@ class TestOnboardingStructure(unittest.TestCase):
         self.assertIn("已确认事实/暂定假设/未知", text)
         self.assertIn("下一步验证", text)
 
-    def test_skill_routes_onboarding_and_preserves_main_workflow(self):
-        text = read("SKILL.md")
-        self.assertIn('version: "1.9.0"', text)
-        self.assertIn("十二个维度文件（00-11）", text)
-        self.assertIn("references/11-建档诊断.md", text)
-        self.assertIn("onboarding_status: in_progress", text)
-        self.assertIn("视为已同意，不重复询问", text)
-        self.assertIn("不机械重问通用首问", text)
-        self.assertIn("in_progress → provisional", text)
-        self.assertIn("provisional → confirmed", text)
-        self.assertIn("初始化依据账本只有三种状态", text)
-        self.assertIn("不得复制空模板后直接放行", text)
-        self.assertIn("三问微诊断", text)
-        for phase in ["**1. 诊**", "**2. 契**", "**3. 行**", "**4. 盘**"]:
-            self.assertIn(phase, text)
-        self.assertIn("7 个 definitive 字段", text)
+    def test_skill_routes_onboarding_and_capsule_preserves_state_workflow(self):
+        skill = read("SKILL.md")
+        self.assertIn("`references/task-onboarding.md`", skill)
+        self.assertIn("长期陪跑、第一次建档、补档案缺口", skill)
+        self.assertIn("in_progress", skill)
+        self.assertIn("provisional", skill)
+        self.assertIn("confirmed", skill)
+        self.assertIn("goal", skill)
+        self.assertIn("execution", skill)
+        self.assertIn("用户一次无歧义确认", skill)
+        self.assertIn("agent 不得代签", skill)
+        self.assertIn("七个字段固定为", skill)
+        self.assertNotIn("references/11-建档诊断.md", skill)
+
+        capsule = read("references/task-onboarding.md")
+        for phrase in [
+            "视为同意，不重复询问",
+            "不得复制空模板后直接放行",
+            "in_progress → provisional → confirmed",
+            "每轮只问一个核心问题",
+            "六模块自适应访谈",
+            "已确认事实 / 暂定假设 / 未知",
+            "完整展示 v0.1 草案",
+            "不得代确认",
+            "原子替换",
+        ]:
+            self.assertIn(phrase, capsule)
+        self.assertGreater(
+            capsule.index("11-建档诊断.md"),
+            capsule.index("## 深层查询地图"),
+        )
 
     def test_dossier_schema_exposes_onboarding_state_and_core_fields(self):
         text = read("templates/dossier-template.md")

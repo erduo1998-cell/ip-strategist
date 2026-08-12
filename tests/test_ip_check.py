@@ -677,6 +677,41 @@ class TestIpCheck(unittest.TestCase):
         self.assertEqual(ip_check.read_text(dossier_path), before)
         self.assertFalse(os.path.exists(dossier_path + ".bak"))
 
+    def test_private_state_symlinks_are_rejected(self):
+        outside = tempfile.mkdtemp(prefix="ip-check-outside-")
+        try:
+            dossier = os.path.join(outside, "dossier.md")
+            with open(dossier, "w", encoding="utf-8") as handle:
+                handle.write("PRIVATE")
+            os.symlink(dossier, os.path.join(self.workdir, "ip-dossier.md"))
+            shutil.rmtree(self.contracts_dir)
+            external_contracts = os.path.join(outside, "contracts")
+            os.makedirs(external_contracts)
+            os.symlink(external_contracts, self.contracts_dir)
+
+            problems, stats = ip_check.run_checks(self.workdir, overdue_days=3)
+            self.assertTrue(self._has_message(problems, "ip-dossier.md 是符号链接"))
+            self.assertTrue(self._has_message(problems, "ip-contracts/ 是符号链接"))
+            self.assertFalse(stats["has_dossier"])
+            self.assertFalse(stats["has_contracts_dir"])
+            with self.assertRaisesRegex(ValueError, "符号链接"):
+                ip_check.sync_dossier_index(self.workdir)
+        finally:
+            shutil.rmtree(outside, ignore_errors=True)
+
+    def test_contract_file_symlink_is_rejected(self):
+        outside = tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", delete=False)
+        try:
+            outside.write("PRIVATE")
+            outside.close()
+            os.symlink(outside.name, os.path.join(self.contracts_dir, "C-20260710-99.md"))
+            problems, stats = ip_check.run_checks(self.workdir, overdue_days=3)
+            self.assertTrue(self._has_message(problems, "契约文件是符号链接"))
+            self.assertEqual(stats["contracts"], 0)
+        finally:
+            outside.close()
+            os.unlink(outside.name)
+
     def test_in_progress_onboarding_is_not_treated_as_complete(self):
         """in_progress 允许缺字段，但必须明确提醒按断点续访。"""
         self._write_dossier(

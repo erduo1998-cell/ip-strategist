@@ -23,13 +23,33 @@ class TestGrowthStructure(unittest.TestCase):
         self.assertIn("六项逐项标为“已有信号 / 未知 / 优先验证”", text)
         self.assertIn("最终回复必须展示完整事实卡", text)
 
-    def test_skill_routes_growth_tasks_without_loading_ten_for_everything(self):
-        text = read("SKILL.md")
-        self.assertIn('version: "1.9.0"', text)
-        self.assertIn("十二个维度文件（00-11）", text)
-        self.assertIn("起号增长 / 播放不转粉 / 爆款系列", text)
-        self.assertIn("references/10-增长与系列.md", text)
-        self.assertNotIn("任何任务都要读取 10", text)
+    def test_skill_routes_growth_through_one_closed_v2_capsule(self):
+        skill = read("SKILL.md")
+        frontmatter = skill.split("---", 2)[1]
+        self.assertEqual(
+            ["name", "description"],
+            [line.split(":", 1)[0] for line in frontmatter.splitlines() if ":" in line],
+        )
+        self.assertIn("起号、播放不转粉、系列、记忆资产、爆款承接", skill)
+        self.assertIn("`references/task-growth.md`", skill)
+        self.assertIn("只读对应一个胶囊", skill)
+        self.assertIn("普通任务不得默认读取 `references/00-11`", skill)
+        self.assertNotIn("references/10-增长与系列.md", skill)
+
+        capsule = read("references/task-growth.md")
+        for phrase in [
+            "每条/每批只设 1 个主验证目标",
+            "播放高但不涨粉的硬门",
+            "已有信号 / 未知 / 优先验证",
+            "下一批只改一个变量",
+            "平台事实门",
+            "最终展示完整事实卡",
+        ]:
+            self.assertIn(phrase, capsule)
+        self.assertGreater(
+            capsule.index("10-增长与系列.md"),
+            capsule.index("## 深层查询地图"),
+        )
 
     def test_contract_keeps_seven_machine_fields_and_adds_growth_body(self):
         text = read("templates/contract-template.md")

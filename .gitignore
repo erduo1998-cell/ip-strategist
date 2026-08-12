@@ -3,9 +3,6 @@
 # 这个脱敏的公开示例、CHANGELOG.md、CONTRIBUTING.md、TROUBLESHOOTING.md、
 # docs/ 等）都是公开的，不得加入忽略。
 
-# 方法论整理规范：记录内部来源、隐私与发布自检规则，仅本地维护用
-SPEC.md
-
 # 耳总私人 IP 定位实例（打法牌 + 本地知识库路径），不公开
 # 仅此精确文件被忽略；references/定位锚点-示例.md 是脱敏公开版，必须保留
 references/耳总IP定位锚点.md
