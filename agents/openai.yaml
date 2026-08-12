@@ -1,0 +1,4 @@
+interface:
+  display_name: "ip-strategist · IP 打造教练"
+  short_description: "一个入口完成定位、选题、写稿、增长、复盘、变现与长期陪跑"
+  default_prompt: "使用 $ip-strategist 判断我当前最重要的一个 IP 任务，并直接交付结果。"

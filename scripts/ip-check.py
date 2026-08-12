@@ -482,6 +482,10 @@ def sync_dossier_index(workdir):
     """从契约原件原子重建 dossier 索引，成功返回写入的契约数。"""
     dossier_path = os.path.join(workdir, "ip-dossier.md")
     contracts_dir = os.path.join(workdir, "ip-contracts")
+    if os.path.islink(dossier_path):
+        raise ValueError("ip-dossier.md 不能是符号链接")
+    if os.path.islink(contracts_dir):
+        raise ValueError("ip-contracts/ 不能是符号链接")
     dossier_text = read_text(dossier_path)
     if dossier_text is None:
         raise ValueError("无法读取 ip-dossier.md")
@@ -490,7 +494,10 @@ def sync_dossier_index(workdir):
     if os.path.isdir(contracts_dir):
         for name in sorted(os.listdir(contracts_dir)):
             if name.startswith("C-") and name.endswith(".md"):
-                contract = parse_contract(os.path.join(contracts_dir, name))
+                path = os.path.join(contracts_dir, name)
+                if os.path.islink(path) or not os.path.isfile(path):
+                    continue
+                contract = parse_contract(path)
                 if contract is not None:
                     contracts.append(contract)
 
@@ -544,12 +551,23 @@ def run_checks(workdir, overdue_days, skill_dir=None):
     dossier_path = os.path.join(workdir, "ip-dossier.md")
     template_dossier = find_template_dossier(workdir, skill_dir)
 
+    dossier_is_link = os.path.islink(dossier_path)
+    contracts_is_link = os.path.islink(contracts_dir)
+    if dossier_is_link:
+        problems.append(("错误", "ip-dossier.md 是符号链接；为避免读取工作目录外的私人状态，已拒绝"))
+    if contracts_is_link:
+        problems.append(("错误", "ip-contracts/ 是符号链接；为避免读取工作目录外的私人状态，已拒绝"))
+
     # ---- 扫契约 ----
     contract_files = []
-    if os.path.isdir(contracts_dir):
+    if os.path.isdir(contracts_dir) and not contracts_is_link:
         for name in sorted(os.listdir(contracts_dir)):
             if name.startswith("C-") and name.endswith(".md"):
-                contract_files.append(os.path.join(contracts_dir, name))
+                path = os.path.join(contracts_dir, name)
+                if os.path.islink(path):
+                    problems.append(("错误", "契约文件是符号链接，已拒绝：%s" % name))
+                elif os.path.isfile(path):
+                    contract_files.append(path)
 
     contracts = []
     seen_cids = set()
@@ -695,7 +713,7 @@ def run_checks(workdir, overdue_days, skill_dir=None):
     # ---- schema_version 比对 ----
     schema_warn = None
     dossier_schema_version = ""
-    dossier_text = read_text(dossier_path)
+    dossier_text = None if dossier_is_link else read_text(dossier_path)
     if dossier_text is not None:
         dossier_schema_version = parse_schema_version(dossier_text)
     if template_dossier:
@@ -833,7 +851,7 @@ def run_checks(workdir, overdue_days, skill_dir=None):
         "contracts": len(contracts),
         "abandoned_count": abandoned_count,
         "has_dossier": dossier_text is not None,
-        "has_contracts_dir": os.path.isdir(contracts_dir),
+        "has_contracts_dir": os.path.isdir(contracts_dir) and not contracts_is_link,
         "template_dossier": template_dossier,
         "onboarding_status": onboarding_status,
         "onboarding_step": onboarding_step,
