@@ -1,3 +1,5 @@
+import json
+import hashlib
 import re
 import urllib.request
 import unittest
@@ -100,6 +102,46 @@ class ReleaseContractTests(unittest.TestCase):
         self.assertIn("<desc", text)
         body = text.replace('xmlns="http://www.w3.org/2000/svg"', "")
         self.assertNotRegex(body, r"<script|javascript:|https?://", re.IGNORECASE)
+
+    def test_remotion_demo_is_reproducible_and_bounded(self):
+        package = json.loads(self.read("demo/remotion/package.json"))
+        self.assertEqual(package["dependencies"]["remotion"], "4.0.508")
+        self.assertEqual(package["dependencies"]["@remotion/cli"], "4.0.508")
+        for script in ["render", "poster", "gif", "build"]:
+            self.assertIn(script, package["scripts"])
+        self.assertIn("--muted", package["scripts"]["render"])
+        source = self.read("demo/remotion/src/IpStrategistDemo.tsx")
+        self.assertIn("虚构演示", source)
+        self.assertNotRegex(source, r"https?://|fetch\(|Math\.random")
+        expected = {
+            "assets/ip-strategist-demo.gif": 1_500_000,
+            "assets/ip-strategist-demo.mp4": 2_000_000,
+            "assets/ip-strategist-demo-poster.png": 500_000,
+        }
+        for relative, limit in expected.items():
+            path = ROOT / relative
+            with self.subTest(relative=relative):
+                self.assertTrue(path.is_file())
+                self.assertLessEqual(path.stat().st_size, limit)
+
+    def test_public_contact_uses_the_established_personal_wechat_asset(self):
+        asset = ROOT / "assets/wechat-qrcode.jpg"
+        self.assertTrue(asset.is_file())
+        self.assertEqual(asset.stat().st_size, 173_299)
+        self.assertEqual(
+            hashlib.sha256(asset.read_bytes()).hexdigest(),
+            "a4f3774d284591cb6d48e94b4b6b18fb7337ef36294a07792bca80e65ed44981",
+        )
+        for relative in [
+            "README.md",
+            "README.en.md",
+            "README.ja.md",
+            "README.ko.md",
+            "README.zh-TW.md",
+            "SUPPORT.md",
+        ]:
+            with self.subTest(relative=relative):
+                self.assertIn("assets/wechat-qrcode.jpg", self.read(relative))
 
 
 if __name__ == "__main__":

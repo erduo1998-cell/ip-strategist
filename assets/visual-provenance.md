@@ -46,3 +46,19 @@ Avoid: changing the archive, adding a face, enlarging the creator so much it com
 - PNG：1360 × 765，RGB，无透明通道，保留为高质量发布素材。
 - WebP：1360 × 765，质量 82，用于 README。
 - 只保留最终选中方向；三张方向稿和编辑过程图不进入仓库。
+
+## Remotion 产品演示
+
+- 资产：`ip-strategist-demo.gif`、`ip-strategist-demo.mp4`、`ip-strategist-demo-poster.png`
+- 可复现源码：`demo/remotion/`
+- 渲染引擎：Remotion 4.0.508
+- 生成日期：2026-08-13
+- 内容边界：演示中的“12 万播放、80 个涨粉”是用于说明增长诊断流程的虚构数据，不对应真实客户、账号或业绩。
+- 原创说明：信息架构、视觉系统、动效、文案和代码均为本项目独立制作；没有复制参考项目的动画、终端录屏、配色或布局。
+
+## 作者联系二维码
+
+- 资产：`wechat-qrcode.jpg`
+- 来源：作者本人长期公开使用的个人微信二维码，与 `erduo-broll-loop-engineering/docs/images/wechat-contact.jpg` 和 ReachSurge 公开联系资产一致。
+- 使用边界：仅用于作者联系、1v1 IP 咨询与商业授权入口；咨询服务与商业使用许可彼此独立。
+- 处理说明：复用既有公开资产，未重新生成、未解码、未修改二维码内容。

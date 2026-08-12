@@ -1,0 +1,29 @@
+{
+  "name": "ip-strategist-readme-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Deterministic Remotion source for the ip-strategist README product demo.",
+  "license": "SEE LICENSE IN ../../LICENSE",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "render": "remotion render src/index.ts IpStrategistDemo ../../assets/ip-strategist-demo.mp4 --codec=h264 --crf=18 --pixel-format=yuv420p --muted",
+    "poster": "remotion still src/index.ts IpStrategistDemo ../../assets/ip-strategist-demo-poster.png --frame=390",
+    "gif": "sh ./render-gif.sh",
+    "build": "npm run typecheck && npm run render && npm run poster && npm run gif"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.508",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.508"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "typescript": "5.9.3"
+  }
+}

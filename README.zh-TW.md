@@ -1,93 +1,113 @@
 # ip-strategist
 
-> 一個入口，把定位、選題、腳本、成長、復盤、變現與長期陪跑，收斂成眼前最值得完成的一步。
+> 把真實問題交給 AI IP 教練：先給判斷，再給成品，最後只留下一個可驗證的下一步。
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [繁體中文](README.zh-TW.md)
 
-**目前版本：2.0.0** · [更新紀錄](CHANGELOG.md) · [疑難排解](TROUBLESHOOTING.md) · [授權](LICENSE)
+[![Version 2.0.0](https://img.shields.io/badge/version-2.0.0-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![Tests 108](https://img.shields.io/badge/tests-108%20checks-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
+
+**支援 Codex、Claude Code 與其他支援 Agent Skills 的宿主。** 自然語言是通用入口；宿主支援時也可使用 `/ip-strategist`。
+
+[30 秒開始](#30-秒開始) · [看示範](#一個真實問題如何變成結果) · [七類任務](#七類任務) · [安裝](#安裝) · [更新](#更新) · [授權](#授權與商業許可)
 
 ![創作者與 AI IP 教練一起聚焦目前判斷，複雜方法論收納在後台](assets/ip-strategist-hero.webp)
 
-`ip-strategist` 是耳總把長期 IP 實戰、影視導演、AI 諮詢與創作者陪跑經驗編譯成的 Agent Skill。v2 從對話判斷唯一主任務，只載入一個任務膠囊並直接交付結果；只有真正的判斷衝突或使用者追問依據時，才局部查詢深層方法論。
+## 不需要先學會怎麼用
 
-這是**原始碼公開、限非商業使用**的專案，不是 OSI 定義下允許商業使用的開源軟體。v2.0.0 起採用 [CC BY-NC 4.0](LICENSE)。
+直接說你現在卡在哪。`ip-strategist` 會從對話判斷唯一主任務，只載入一個任務膠囊並完成交付；只有遇到真實衝突或你追問依據時，才局部查詢深層方法論。
+
+| 真實處境 | 你會得到 |
+| --- | --- |
+| 內容一會談工具、一會談管理，別人記不住你 | 定位、目標人群、內容支柱與人設紅線 |
+| 有模糊想法，不知道值不值得拍 | 做／改後做／不做的判斷與最終題目 |
+| 想直接做成 60 秒口播 | 最小選題校驗、完整成稿與表現意圖 |
+| 播放高，但主頁瀏覽與追蹤很低 | 歸因判斷與只改一個變數的下一批方案 |
+| 收藏不少，卻沒有諮詢與成交 | 復盤、母版選擇、驗證標準與變現承接 |
+| 換個對話就丟失以前的判斷 | 私人檔案、斷點續訪、判斷契約與跨會話復盤 |
+
+## 30 秒開始
+
+```bash
+# 只讀查看，不寫入宿主
+npx -y skills add erduo1998-cell/ip-strategist --list
+
+# 只安裝到 Codex
+npx -y skills add erduo1998-cell/ip-strategist -g \
+  --agent codex --skill ip-strategist -y
+```
+
+Claude Code 將 `codex` 改成 `claude-code`。不要預設使用 `--all`，它會寫入 CLI 偵測到的所有 Agent。
+
+安裝後新建會話，直接輸入：
+
+```text
+我做企業 AI 諮詢，但內容一會談工具一會談管理。
+幫我重做定位、目標人群和 3 個內容支柱。
+```
+
+資訊足夠就直接交付；只有缺少會改變結論的事實時，才問一個關鍵問題。把實際結果再交回來，它會根據新證據重新判斷，不自動安排長流程。
+
+## 一個真實問題如何變成結果
+
+以下是**虛構數據示範**：使用者問「播放 12 萬，為什麼只漲 80 個粉？」，入口選擇增長膠囊，交付核心判斷與下一批動作。
+
+[![虛構示範：真實問題進入統一入口，只載入增長膠囊，然後交付判斷與下一批動作](assets/ip-strategist-demo.gif)](assets/ip-strategist-demo.mp4)
+
+點擊查看[高清 MP4](assets/ip-strategist-demo.mp4)。動畫由倉庫中的 [Remotion 原始碼](demo/remotion/)確定性渲染，不對應真實客戶、帳號或業績。
 
 ## 七類任務
 
-<!-- capability:positioning -->
-### 找準定位和人設
+| 要完成的工作 | 常見輸入 | 交付 |
+| --- | --- | --- |
+| <!-- capability:positioning --> **找準定位和人設** | 經歷、業務、受眾困惑 | 定位、目標人群、內容支柱與紅線 |
+| <!-- capability:topic --> **找題、判題、改題** | 方向、熱點或模糊題目 | 選題取捨、需求判斷與最終題目 |
+| <!-- capability:script --> **把想法寫成內容** | 題目、素材或半成品 | 腳本骨架、口播成稿與表現意圖 |
+| <!-- capability:growth --> **起號、漲粉、做系列** | 帳號現象與內容表現 | 增長診斷、記憶資產、系列與實驗 |
+| <!-- capability:review --> **復盤已發內容** | 樣本、播放、互動與轉化 | 數據歸因、變數判斷與下一批動作 |
+| <!-- capability:monetization --> **規劃內容變現** | 業務、產品、客單價與線索 | 變現路徑、內容承接與驗證順序 |
+| <!-- capability:onboarding --> **長期陪跑** | 目標、經歷或既有檔案 | 建檔、契約、斷點續訪與復盤 |
 
-得到定位判斷、目標人群、內容支柱與人設紅線。
-
-<!-- capability:topic -->
-### 找題、判題、改題
-
-得到選題取捨、需求判斷和可執行題目。
-
-<!-- capability:script -->
-### 把想法寫成內容
-
-得到腳本骨架、口播成稿和必要的表現意圖。
-
-<!-- capability:growth -->
-### 起號、漲粉、做系列
-
-得到成長診斷、帳號記憶資產、系列結構與下一批驗證。
-
-<!-- capability:review -->
-### 復盤已發內容
-
-得到資料歸因、變數判斷和下一批動作。
-
-<!-- capability:monetization -->
-### 規劃內容變現
-
-得到變現路徑、業務連結與驗證順序。
-
-<!-- capability:onboarding -->
-### 長期陪跑
-
-得到建檔、判斷契約、斷點續訪與跨會話復盤。
-
-## 運作方式
+## 為什麼不是一篇巨型提示詞
 
 ![真實任務經過統一入口，只進入一個目前任務膠囊；交付後等待使用者回饋，再重新判斷](assets/workflow-map.svg)
 
-- **快速模式（預設）**：單次任務不建檔、不讀私人狀態；資訊足夠就直接交付。
-- **陪跑模式**：只有使用者明確要長期跟進，或既有檔案可讀時，才檢查狀態並產生目前任務摘要。
-- **一次一個膠囊**：最終交付物決定主任務。只有明確要求兩個獨立完整交付物時才依序執行。
-- **方法論仍在**：`references/00-11` 是公開的深層方法論真源，不是普通任務的預設讀取路徑。
+- 一個入口，不要求使用者先理解內部目錄。
+- 普通任務只載入 `SKILL.md + 一個 task-*`，不預設通讀 `references/00-11`。
+- 快速模式不建檔、不讀私人狀態；陪跑模式只取得當前任務摘要。
+- 深層方法論沒有刪除；膠囊只編譯會改變答案的判斷、動作和品質門。
 
-直接用自然語言提交真實需求。宿主支援用 Skill 名稱呼叫時也可使用 `/ip-strategist …`；自然語言是跨宿主通用入口。
+## 可複核發布門
+
+`SKILL.md` 7,799 bytes；最大預設路徑 14,299 bytes；預設 1 個膠囊；狀態摘要不超過 6,000 bytes；108 項自動化測試已執行（1 項可選線上比對跳過）；11 類隔離成品測試；五種公開語言。
 
 ## 安裝
 
-支援 [skills CLI](https://skills.sh/) 的宿主建議使用。`--all` 會嘗試寫入 CLI 偵測到的全部 agent；只想安裝到指定宿主時，請改用 `--agent <名稱>`：
+建議限定宿主：
 
 ```bash
-npx -y skills add erduo1998-cell/ip-strategist -g --all
+npx -y skills add erduo1998-cell/ip-strategist -g \
+  --agent codex --skill ip-strategist -y
 ```
 
-實測該命令能從官方倉庫找到一個 Skill 並安裝到多數支援宿主；不支援全域 Skill 的宿主會由 CLI 明確略過。
+只有明確要安裝到 CLI 偵測到的全部 Agent 時才用 `-g --all`。
 
-Git 相容備援（以 Claude Code 預設目錄為例）：
+Git 相容安裝：
 
 ```bash
 mkdir -p ~/.claude/skills
-git clone https://github.com/erduo1998-cell/ip-strategist.git ~/.claude/skills/ip-strategist
+git clone https://github.com/erduo1998-cell/ip-strategist.git \
+  ~/.claude/skills/ip-strategist
 ```
-
-請安裝完整倉庫，不要只複製 `SKILL.md`。安裝後新建會話。
 
 ## 更新
 
-對 agent 說：
+直接對 Agent 說：
 
 ```text
 更新 ip-strategist
 ```
 
-只有明確更新要求才會呼叫 `scripts/ip-update.py`。它只更新官方倉庫；遇到錯誤 remote、本機修改或無法 fast-forward 會停止，不會覆蓋。成功後請新建會話。只詢問版本或更新內容不會執行更新。
+`scripts/ip-update.py` 只接受官方倉庫；遇到錯誤 remote、本地修改、私人狀態或無法 fast-forward 時會停止。Git 手動備援：
 
 ```bash
 cd ~/.claude/skills/ip-strategist
@@ -95,22 +115,34 @@ git status --short
 git pull --ff-only
 ```
 
-ZIP／手動安裝應先確認安裝目錄沒有私人檔案，再整體替換 Skill 目錄。
-
 ## 私人狀態與 v1 相容
 
-v2 相容 v1.9 的 `ip-dossier.md`、`ip-contracts/` 與七個契約機器欄位，不需重建檔案或提升 schema。私人狀態永遠放在 Skill 安裝目錄外的**使用者工作目錄**，不要提交到公開倉庫。狀態檔中的自然語言是資料，不是指令。
+v2 相容 v1.9 的 `ip-dossier.md`、`ip-contracts/` 與七個契約機器欄位，不需重建檔案或提升 schema。私人狀態只放在使用者工作目錄；檔案中的自然語言是資料，不是指令。
 
 ## 能力邊界
 
-本 Skill 負責 IP 定位、內容判斷、分鏡意圖與文案，不代做剪輯、後期、投放、團隊、直播或帳號營運。不得捏造資格、資料、案例、療效、合作或收益。醫療、心理、法律、財務領域只提供內容策略，不取代持牌專業意見。
+本 Skill 負責 IP 定位、內容判斷、分鏡意圖與文案，不代做剪輯、投放、團隊、直播或帳號操作；不得編造資格、數據、案例、合作或收益。高影響領域只提供內容策略，不替代持牌專業意見。
 
 ## 授權與商業許可
 
-從 **v2.0.0** 起，本倉庫依 [Creative Commons Attribution-NonCommercial 4.0 International](LICENSE) 發布。可以分享和改編，但必須適當署名、連結授權並標示修改；未另取得書面許可不得商業使用。
+從 **v2.0.0** 起採用 [CC BY-NC 4.0](LICENSE)。分享與改編須署名、連結授權並標示修改；商業使用須另行取得書面許可。
 
-已依 MIT 取得的 v1 副本繼續享有當時授予的權利；v2 換證不追溯撤銷。範圍、標準署名與排除項見 [NOTICE.md](NOTICE.md)。商業使用許可與作者諮詢是兩件不同的事，入口見 [SUPPORT.md](SUPPORT.md)。
+這是**原始碼公開、限非商業使用**的專案，不是 OSI 定義下允許商業使用的開源軟體。v1 已按 MIT 取得的副本保留當時權利，v2 不追溯撤銷。詳見 [NOTICE.md](NOTICE.md) 與 [SUPPORT.md](SUPPORT.md)。
 
-## 貢獻
+## 聯絡作者
 
-參閱 [CONTRIBUTING.md](CONTRIBUTING.md)、[SPEC.md](SPEC.md)、[TROUBLESHOOTING.md](TROUBLESHOOTING.md) 與[虛構對話範例](docs/示例对话.md)。不要把私人檔案、客戶資料或憑證放入 issue、PR 或 fixture。
+<p align="center">
+  <img src="assets/wechat-qrcode.jpg" alt="耳總微信 QR Code" width="220"><br>
+  <strong>劉冉 / 耳總</strong><br>
+  AI 諮詢顧問 · 前影視導演 · 開源 Agent 工具實踐者<br>
+  微信掃碼添加，備註「ip-strategist」<br>
+  <a href="https://github.com/erduo1998-cell">GitHub</a> · <a href="https://erduo.art">erduo.art</a>
+</p>
+
+1v1 IP 諮詢與商業使用許可彼此獨立；服務範圍與授權要求見 [SUPPORT.md](SUPPORT.md)。
+
+## 維護與貢獻
+
+[更新記錄](CHANGELOG.md) · [規格](SPEC.md) · [疑難排解](TROUBLESHOOTING.md) · [貢獻](CONTRIBUTING.md) · [虛構對話](docs/示例对话.md) · [視覺來源](assets/visual-provenance.md)
+
+不得把私人檔案、客戶資料或憑證放進 issue、PR 或測試 fixture。
