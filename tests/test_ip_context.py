@@ -118,19 +118,25 @@ next_review_date: %s
         self.assertEqual(len(ip_context.TASKS), 7)
         self.assertEqual(set(ip_context.TASK_FIELDS), set(ip_context.TASKS))
 
-    def test_missing_dossier_is_quick_and_creates_nothing(self):
+    def test_missing_dossier_requires_onboarding_and_creates_nothing(self):
         before = set(os.listdir(self.workdir))
         output = ip_context.build_context(self.workdir, "growth")
-        self.assertIn("- mode: quick", output)
+        self.assertIn("- mode: onboarding_required", output)
+        self.assertIn("- requested_task: growth", output)
+        self.assertIn("- required_task: onboarding", output)
         self.assertIn("- dossier: missing", output)
         self.assertIn("- contract_to_open: null", output)
         self.assertEqual(before, set(os.listdir(self.workdir)))
 
-    def test_in_progress_dossier_resumes_onboarding(self):
+    def test_in_progress_dossier_forces_onboarding_even_when_growth_requested(self):
         self._dossier("in_progress")
-        output = ip_context.build_context(self.workdir, "onboarding")
+        output = ip_context.build_context(self.workdir, "growth")
         self.assertIn("- mode: onboarding", output)
+        self.assertIn("- requested_task: growth", output)
+        self.assertIn("- required_task: onboarding", output)
         self.assertIn("- onboarding_step: execution", output)
+        self.assertIn('90 天唯一主要目标: "获得精准咨询线索"', output)
+        self.assertNotIn('更新节奏: "每周三条"', output)
 
     def test_task_filtering_keeps_relevant_knowledge(self):
         self._dossier()

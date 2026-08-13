@@ -1,10 +1,10 @@
 # ip-strategist
 
-> 실제 문제를 AI IP 코치에게 맡기세요. 먼저 판단하고, 완성물을 만들고, 검증할 다음 한 단계만 남깁니다.
+> 먼저 비공개 IP 기록을 만드세요. 이후 모든 질문은 기록과 데이터로 근본 원인과 증상을 구분한 뒤 완성물과 검증할 다음 한 단계를 냅니다.
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [繁體中文](README.zh-TW.md)
 
-[![Version 2.0.0](https://img.shields.io/badge/version-2.0.0-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![Tests 108](https://img.shields.io/badge/tests-108%20checks-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
+[![Version 2.0.1](https://img.shields.io/badge/version-2.0.1-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![Tests 114](https://img.shields.io/badge/tests-114%20checks-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
 
 **Codex, Claude Code 및 Agent Skills를 지원하는 호스트에서 사용할 수 있습니다.** 자연어가 공통 입구이며, 지원 호스트에서는 `/ip-strategist`도 사용할 수 있습니다.
 
@@ -14,7 +14,7 @@
 
 ## 사용법부터 배울 필요가 없습니다
 
-지금 막힌 문제를 그대로 말하세요. `ip-strategist`는 대화에서 주 작업 하나를 고르고, 작업 캡슐 하나만 불러 완성물을 전달합니다. 실제 판단 충돌이 있거나 근거를 요청할 때만 심층 방법론을 부분적으로 확인합니다.
+첫 사용에서는 목표, 실제 경험과 근거, 대상, 가치, 사업, 실행 제약, 이후 데이터를 담는 여섯 부분의 비공개 기록을 만듭니다. 그 뒤에는 막힌 문제를 그대로 말하세요. `ip-strategist`는 관련 요약을 먼저 읽고, 사용자가 말한 문제가 근본 원인인지 증상인지 검증되지 않은 가설인지 증거와 충돌하는지 판단한 다음 작업 캡슐 하나로 결과를 만듭니다.
 
 | 실제 상황 | 받게 되는 결과 |
 | --- | --- |
@@ -38,18 +38,17 @@ npx -y skills add erduo1998-cell/ip-strategist -g \
 
 Claude Code는 `codex`를 `claude-code`로 바꿉니다. `--all`은 감지된 모든 Agent에 쓰므로 기본값으로 사용하지 않습니다.
 
-새 세션에서 실제 작업을 바로 입력합니다.
+새 세션에서는 먼저 다음과 같이 입력합니다.
 
 ```text
-기업 AI 컨설팅을 하지만 콘텐츠가 도구와 경영 사이를 오갑니다.
-포지셔닝, 대상 고객, 콘텐츠 축 3개를 다시 설계해 주세요.
+ip-strategist를 처음 사용합니다. 비공개 IP 기록을 만들어 주세요.
 ```
 
-정보가 충분하면 바로 결과를 냅니다. 답을 바꿀 사실이 부족할 때만 핵심 질문 하나를 합니다.
+Agent는 저장 위치와 개인정보 경계를 설명하고 동의를 한 번 받습니다. 그다음 여섯 모듈을 한 번에 한 질문씩 진행합니다. 완성 초안을 확인해 `provisional`이 되기 전에는 포지셔닝, 주제, 대본, 성장, 회고, 수익화를 처리하지 않습니다. 이후에는 작업과 새 데이터를 바로 주면 표면 증상을 진단으로 착각하지 않습니다.
 
 ## 하나의 실제 질문이 결과가 되는 과정
 
-아래는 **가상 데이터 데모**입니다. “12만 조회인데 팔로우는 80명뿐인 이유?”라는 질문에서 성장 캡슐만 선택해 핵심 판단과 다음 묶음의 행동을 전달합니다.
+아래는 **가상 데이터 데모**입니다. “12만 조회인데 팔로우는 80명뿐인 이유?”라는 질문에 먼저 관련 기록과 데이터를 읽고, 표면 증상을 미래 가치에 대한 검증 가설로 다시 정의한 뒤 성장 캡슐을 선택합니다.
 
 [![가상 데모: 실제 질문이 통합 입구로 들어가 성장 캡슐 하나만 불러 판단과 다음 행동을 전달하는 과정](assets/ip-strategist-demo.gif)](assets/ip-strategist-demo.mp4)
 
@@ -65,20 +64,22 @@ Claude Code는 `codex`를 `claude-code`로 바꿉니다. `--all`은 감지된 �
 | <!-- capability:growth --> **계정 시작·성장·시리즈화** | 계정 현상과 게시 결과 | 성장 진단, 기억 자산, 시리즈, 실험 |
 | <!-- capability:review --> **게시한 콘텐츠 회고** | 게시물, 조회, 반응, 전환 | 귀인, 변수 진단, 다음 행동 |
 | <!-- capability:monetization --> **콘텐츠 수익화 설계** | 사업, 상품, 가격, 리드 | 수익 경로, 콘텐츠 연결, 검증 순서 |
-| <!-- capability:onboarding --> **장기 코칭** | 목표, 경험, 기존 기록 | 온보딩, 계약, 중단점 재개, 회고 |
+| <!-- capability:onboarding --> **판단 기반 만들기** | 첫 사용, 중단점, 기록 누락 | 비공개 기록, 근거 장부, 재개, 회고 |
 
 ## 거대한 프롬프트가 아닌 이유
 
 ![실제 요청이 하나의 통합 입구와 현재 작업 캡슐 하나를 거치며 결과 전달 후 피드백에 따라 다시 판단되는 흐름](assets/workflow-map.svg)
 
+- 기록이 먼저입니다. 첫 사용은 반드시 기록을 만들고, 완료 전 새 작업은 근거와 대기 작업으로 보존합니다.
+- 매번 다시 진단합니다. 정식 작업은 관련 기록과 데이터 요약으로 근본 원인, 증상, 가설을 구분합니다.
 - 하나의 입구이므로 사용자가 내부 기능 목록을 먼저 배울 필요가 없습니다.
-- 일반 작업은 `SKILL.md + 하나의 task-*`만 읽고 `references/00-11`을 기본으로 통독하지 않습니다.
-- 빠른 모드는 기록을 만들거나 개인 상태를 읽지 않습니다. 코칭도 현재 작업 요약만 사용합니다.
+- 정식 작업은 `SKILL.md + 작업별 상태 요약 + 하나의 task-*`만 읽고 `references/00-11`을 기본으로 통독하지 않습니다.
+- 기록은 사용자 작업 디렉터리에만 둡니다. 거부하거나 안전한 읽기·쓰기가 불가능하면 낮은 신뢰도와 비저장을 명시한 제한 분석만 제공합니다.
 - 심층 방법론은 삭제되지 않았습니다. 답을 바꾸는 판단, 행동, 품질 기준만 캡슐에 컴파일합니다.
 
 ## 검증 가능한 릴리스 기준
 
-`SKILL.md` 7,799 bytes, 최대 기본 경로 14,299 bytes, 기본 캡슐 1개, 상태 요약 6,000 bytes 이하, 자동 테스트 108개 실행(선택적 온라인 비교 1개 건너뜀), 격리된 결과 테스트 11종, 공개 언어 5개.
+`SKILL.md` 9,225 bytes, 6,000-byte 상태 요약 상한을 포함한 최대 기본 경로 22,745 bytes, 기본 캡슐 1개, 상태 요약 6,000 bytes 이하, 자동 테스트 114개 실행(선택적 온라인 비교 1개 건너뜀), 격리된 결과 테스트 11종, 기록 우선 행동 테스트 3세션, 공개 언어 5개.
 
 ## 설치
 

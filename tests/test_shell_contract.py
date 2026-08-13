@@ -23,28 +23,43 @@ class TestShellContract(unittest.TestCase):
             read(f"references/shell.{locale}.md")
             for locale in ["zh-CN", "en", "ja", "ko", "zh-TW"]
         )
-        self.assertIn("真實的問題", corpus)
-        self.assertIn("single most valuable task", corpus)
-        self.assertIn("한 가지 과제", corpus)
+        self.assertIn("根因、症狀或待驗證假設", corpus)
+        self.assertIn("root cause, a symptom, or an untested hypothesis", corpus)
+        self.assertIn("근본 원인인지 증상인지 검증되지 않은 가설인지", corpus)
         for forbidden in ["task-script.md", "task-topic.md", "references/00", "胶囊"]:
             self.assertNotIn(forbidden, corpus)
 
     def test_skill_contract_has_three_entry_states_and_direct_delivery(self):
         text = read("SKILL.md")
-        for phrase in ["新手入门", "任务路由", "任务续接", "信息足够就不展示菜单", "默认使用用户最后一条有效消息的语言"]:
+        for phrase in ["新手入门", "首次建档", "断点续访", "任务路由", "默认使用用户最后一条有效消息的语言"]:
             self.assertIn(phrase, text)
         self.assertIn("不输出“已读取”“已加载”之类回执", text)
         self.assertIn("上一步结束时不自动铺设完整长链", text)
 
-    def test_newcomer_shell_hands_same_or_next_message_to_one_task_capsule(self):
+    def test_newcomer_shell_never_bypasses_required_onboarding(self):
         text = read("SKILL.md")
         for phrase in [
-            "它只负责短教程，不代替任务胶囊",
-            "同一条消息已经有真实任务时",
-            "加载且只加载一个 `references/task-*.md` 并直接交付",
-            "用户下一条给出首个真实任务时",
-            "不重复教程",
-            "不同时保留或加载其他任务胶囊",
+            "同一条消息已有真实任务时，把它作为建档证据和后续待办",
+            "把原任务按用户原意记入“上次会话约定”作为建档后待办",
+            "任何定位、选题、写稿、增长、复盘或变现任务都先路由到",
+            "不得用三问微诊断、显式假设或通用建议冒充完整判断",
+            "无论用户提出什么新任务，都先从 `onboarding_step` 续完建档",
+            "档案为 `provisional` 或 `confirmed` 且校验通过时",
+        ]:
+            self.assertIn(phrase, text)
+
+        onboarding = read("references/task-onboarding.md")
+        self.assertIn("建档完成后重判并处理：", onboarding)
+        self.assertIn("不得让用户重新输入", onboarding)
+
+    def test_formal_tasks_require_dossier_summary_and_problem_reframe(self):
+        text = read("SKILL.md")
+        for phrase in [
+            "后续每个任务必须先读取任务相关档案摘要、历史数据、依据账本和认知沉淀",
+            "根因、症状还是待验证假设",
+            "所有正式任务都消费 `ip-context.py` 的任务相关摘要",
+            "问题重判",
+            "是症状或伪问题时，先明确纠偏并改解真正问题",
         ]:
             self.assertIn(phrase, text)
 
@@ -77,6 +92,28 @@ class TestShellContract(unittest.TestCase):
             "next_review_date",
         ]:
             self.assertIn(phrase, text)
+
+    def test_shells_request_consent_before_the_first_onboarding_question(self):
+        shells = {
+            "references/shell.zh-CN.md": ("是否同意", "为什么现在做 IP"),
+            "references/shell.zh-TW.md": ("是否同意", "為什麼現在做 IP"),
+            "references/shell.en.md": ("Do you consent", "why build an IP now"),
+            "references/shell.ja.md": ("同意しますか", "なぜ今 IP を始めるのか"),
+            "references/shell.ko.md": ("동의하시나요", "왜 지금 IP를 만들려는가"),
+        }
+        for relative, (consent, first_question) in shells.items():
+            with self.subTest(relative=relative):
+                text = read(relative)
+                self.assertIn(consent, text)
+                self.assertIn(first_question, text)
+                self.assertLess(text.index(consent), text.index(first_question))
+
+    def test_new_dossier_template_has_no_persistent_bypass_mode(self):
+        text = read("templates/dossier-template.md")
+        self.assertIn("档案使用状态", text)
+        self.assertIn("完整能力", text)
+        self.assertNotIn("- **默认模式**", text)
+        self.assertNotIn("B（单次咨询）", text)
 
 
 if __name__ == "__main__":

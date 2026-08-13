@@ -32,3 +32,4 @@ ip-contracts/
 !tests/fixtures/sample-workspace/ip-dossier.md
 !tests/fixtures/sample-workspace/ip-contracts/
 !tests/fixtures/sample-workspace/ip-contracts/**
+!tests/fixtures/dossier-first-confirmed/ip-dossier.md

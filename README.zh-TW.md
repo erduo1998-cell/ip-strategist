@@ -1,10 +1,10 @@
 # ip-strategist
 
-> 把真實問題交給 AI IP 教練：先給判斷，再給成品，最後只留下一個可驗證的下一步。
+> 先建立私人 IP 檔案。之後每次提問都先用檔案和數據判斷你說的是根因或症狀，再給成品與一個可驗證的下一步。
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [繁體中文](README.zh-TW.md)
 
-[![Version 2.0.0](https://img.shields.io/badge/version-2.0.0-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![Tests 108](https://img.shields.io/badge/tests-108%20checks-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
+[![Version 2.0.1](https://img.shields.io/badge/version-2.0.1-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![Tests 114](https://img.shields.io/badge/tests-114%20checks-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
 
 **支援 Codex、Claude Code 與其他支援 Agent Skills 的宿主。** 自然語言是通用入口；宿主支援時也可使用 `/ip-strategist`。
 
@@ -14,7 +14,7 @@
 
 ## 不需要先學會怎麼用
 
-直接說你現在卡在哪。`ip-strategist` 會從對話判斷唯一主任務，只載入一個任務膠囊並完成交付；只有遇到真實衝突或你追問依據時，才局部查詢深層方法論。
+第一次使用先完成六模組私人檔案，記錄目標、真實經歷與證據、受眾、價值、業務、執行限制及後續數據。之後只要說你卡在哪；`ip-strategist` 會先讀取任務相關摘要，判斷這是根因、症狀、待驗證假設或證據衝突，再載入一個任務膠囊完成交付。
 
 | 真實處境 | 你會得到 |
 | --- | --- |
@@ -38,18 +38,17 @@ npx -y skills add erduo1998-cell/ip-strategist -g \
 
 Claude Code 將 `codex` 改成 `claude-code`。不要預設使用 `--all`，它會寫入 CLI 偵測到的所有 Agent。
 
-安裝後新建會話，直接輸入：
+安裝後新建會話，先輸入：
 
 ```text
-我做企業 AI 諮詢，但內容一會談工具一會談管理。
-幫我重做定位、目標人群和 3 個內容支柱。
+第一次使用 ip-strategist，請幫我建立私人 IP 檔案。
 ```
 
-資訊足夠就直接交付；只有缺少會改變結論的事實時，才問一個關鍵問題。把實際結果再交回來，它會根據新證據重新判斷，不自動安排長流程。
+Agent 會先說明保存位置與隱私邊界並取得一次同意，再以六模組訪談每次只問一個問題。完整草案經你確認進入 `provisional` 後，才處理定位、選題、寫稿、增長、復盤或變現。往後直接交任務與新數據，它會先重判問題，不順著表層症狀開藥方。
 
 ## 一個真實問題如何變成結果
 
-以下是**虛構數據示範**：使用者問「播放 12 萬，為什麼只漲 80 個粉？」，入口選擇增長膠囊，交付核心判斷與下一批動作。
+以下是**虛構數據示範**：使用者問「播放 12 萬，為什麼只漲 80 個粉？」，入口先讀取任務相關檔案與數據，把表層症狀重判成待驗證的未來價值問題，再選擇增長膠囊。
 
 [![虛構示範：真實問題進入統一入口，只載入增長膠囊，然後交付判斷與下一批動作](assets/ip-strategist-demo.gif)](assets/ip-strategist-demo.mp4)
 
@@ -65,20 +64,22 @@ Claude Code 將 `codex` 改成 `claude-code`。不要預設使用 `--all`，它�
 | <!-- capability:growth --> **起號、漲粉、做系列** | 帳號現象與內容表現 | 增長診斷、記憶資產、系列與實驗 |
 | <!-- capability:review --> **復盤已發內容** | 樣本、播放、互動與轉化 | 數據歸因、變數判斷與下一批動作 |
 | <!-- capability:monetization --> **規劃內容變現** | 業務、產品、客單價與線索 | 變現路徑、內容承接與驗證順序 |
-| <!-- capability:onboarding --> **長期陪跑** | 目標、經歷或既有檔案 | 建檔、契約、斷點續訪與復盤 |
+| <!-- capability:onboarding --> **建立判斷底座** | 首次使用、斷點或檔案缺口 | 私人檔案、依據帳本、斷點續訪與復盤 |
 
 ## 為什麼不是一篇巨型提示詞
 
 ![真實任務經過統一入口，只進入一個目前任務膠囊；交付後等待使用者回饋，再重新判斷](assets/workflow-map.svg)
 
+- 檔案先行：首次使用必須先建檔；未完成前，新任務只作證據和待辦。
+- 每次重判：正式任務先用相關檔案與數據摘要區分根因、症狀和假設。
 - 一個入口，不要求使用者先理解內部目錄。
-- 普通任務只載入 `SKILL.md + 一個 task-*`，不預設通讀 `references/00-11`。
-- 快速模式不建檔、不讀私人狀態；陪跑模式只取得當前任務摘要。
+- 正式任務只載入 `SKILL.md + 任務相關狀態摘要 + 一個 task-*`，不預設通讀 `references/00-11`。
+- 檔案只留在使用者工作目錄；明確拒絕或宿主無法安全讀寫時，只能提供標明低置信度、不沉澱的有限分析。
 - 深層方法論沒有刪除；膠囊只編譯會改變答案的判斷、動作和品質門。
 
 ## 可複核發布門
 
-`SKILL.md` 7,799 bytes；最大預設路徑 14,299 bytes；預設 1 個膠囊；狀態摘要不超過 6,000 bytes；108 項自動化測試已執行（1 項可選線上比對跳過）；11 類隔離成品測試；五種公開語言。
+`SKILL.md` 9,225 bytes；含 6,000-byte 狀態摘要上限的最大預設路徑 22,745 bytes；預設 1 個膠囊；狀態摘要不超過 6,000 bytes；114 項自動化測試已執行（1 項可選線上比對跳過）；11 類隔離成品測試；3 個檔案優先行為會話；五種公開語言。
 
 ## 安裝
 

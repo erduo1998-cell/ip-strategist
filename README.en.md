@@ -1,10 +1,10 @@
 # ip-strategist
 
-> Give your real problem to an AI IP coach. Get a decision first, a usable deliverable next, and one testable next move.
+> Build a private IP dossier first. Every later task uses your dossier and evidence to separate the real problem from its symptoms before producing a deliverable and one testable next move.
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [繁體中文](README.zh-TW.md)
 
-[![Version 2.0.0](https://img.shields.io/badge/version-2.0.0-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![Tests 108](https://img.shields.io/badge/tests-108%20checks-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
+[![Version 2.0.1](https://img.shields.io/badge/version-2.0.1-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![Tests 114](https://img.shields.io/badge/tests-114%20checks-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
 
 **For Codex, Claude Code, and other hosts that support Agent Skills.** Natural language is the universal entry point; `/ip-strategist` also works where named Skill invocation is supported.
 
@@ -14,7 +14,7 @@
 
 ## You do not need to learn the system first
 
-Say what is stuck. `ip-strategist` selects one primary task from the conversation, loads one task capsule, and completes the requested deliverable. It consults deeper methodology only for a real conflict or when you ask for the rationale.
+First use builds a six-part private dossier covering goals, real experience and evidence, audience, value, business, execution constraints, and later performance data. After that, say what is stuck. `ip-strategist` reads the task-relevant summary, classifies your stated problem as a root cause, symptom, untested hypothesis, or evidence conflict, then loads one task capsule and completes the deliverable.
 
 | Your real situation | What you receive |
 | --- | --- |
@@ -44,27 +44,26 @@ npx -y skills add erduo1998-cell/ip-strategist -g \
 
 For Claude Code, replace `codex` with `claude-code`. Do not default to `--all`; it writes to every Agent detected by the CLI.
 
-### 2. Start a new session and give it the task
+### 2. Start a new session and build the private dossier
 
 ```text
-I consult on enterprise AI, but my content alternates between tools and management.
-Redo my positioning, target audience, and three content pillars.
+This is my first time using ip-strategist. Help me build my private IP dossier.
 ```
 
-If the evidence is sufficient, it delivers directly. It asks one decisive question only when the missing fact would change the answer.
+The Agent explains where the dossier is stored and asks for consent once. It then runs a resumable six-part interview, one decisive question at a time. Positioning, topics, scripts, growth, reviews, and monetization begin only after you confirm the complete draft and it becomes `provisional`.
 
-### 3. Return the result or new evidence
+### 3. Later, give it the task and new evidence
 
 ```text
-I published six posts. The second pillar generated the most qualified inquiries.
-What is the one variable to change next?
+I published six posts. The second pillar generated the most qualified inquiries, but follower growth was weak.
+First decide whether that is the real problem I should solve now, then tell me the one variable to change next.
 ```
 
-The coach reassesses the current step from evidence instead of auto-generating a long program.
+The coach compares that statement with your goals, history, and current evidence instead of treating the surface symptom as the diagnosis.
 
 ## From one real question to a usable result
 
-This is a **fictional-data demo**. The user asks why 120,000 views produced only 80 followers; the entry point selects the growth capsule and returns the core diagnosis and next-batch actions.
+This is a **fictional-data demo**. The user asks why 120,000 views produced only 80 followers. The entry point first reads the task-relevant dossier and data, reframes the surface symptom into a future-value hypothesis, and only then selects the growth capsule.
 
 [![Fictional demo: one real question enters the unified entry point, loads only the growth capsule, and returns a decision and next actions](assets/ip-strategist-demo.gif)](assets/ip-strategist-demo.mp4)
 
@@ -80,7 +79,7 @@ Click for the [high-resolution MP4](assets/ip-strategist-demo.mp4). The animatio
 | <!-- capability:growth --> **Launch, grow, and build series** | Account symptoms and content results | Growth diagnosis, memory assets, series, and experiment |
 | <!-- capability:review --> **Review published content** | Posts, views, engagement, and conversion | Attribution, variable diagnosis, and next-batch actions |
 | <!-- capability:monetization --> **Plan content monetization** | Business, offer, price, and leads | Monetization path, content bridge, and validation order |
-| <!-- capability:onboarding --> **Continue long-term coaching** | Goals, experience, or an existing dossier | Onboarding, contracts, session resumption, and review |
+| <!-- capability:onboarding --> **Build the judgment foundation** | First use, a checkpoint, or a dossier gap | Private dossier, evidence ledger, resumption, and review |
 
 Intent words may follow the same entry point; they are not separate Skills:
 
@@ -95,23 +94,25 @@ Intent words may follow the same entry point; they are not separate Skills:
 
 ![A real request enters one unified entry point and one current task capsule; after delivery, new feedback triggers a fresh decision](assets/workflow-map.svg)
 
+- **Dossier first:** first use must complete onboarding; new tasks remain evidence and backlog until it is complete.
+- **Reframe every task:** formal work first uses the relevant dossier and data summary to distinguish causes, symptoms, and hypotheses.
 - **One entry point:** users do not study an internal capability directory.
 - **One current task:** the final deliverable selects the route; two capsules run only when two complete deliverables are explicit.
-- **One capsule:** normal work loads `SKILL.md + one task-*`, not all of `references/00-11`.
-- **Quick mode by default:** one-off work creates no dossier and reads no private state.
-- **Bounded coaching context:** state is summarized for the current task; one named contract is opened only when necessary.
+- **One capsule:** formal work loads `SKILL.md + task-specific state summary + one task-*`, not all of `references/00-11`.
+- **Explicit privacy boundary:** state stays in the user's working directory. Refusal or an unsafe host permits only a labeled low-confidence, non-persistent limited analysis.
 - **The methodology remains:** deep sources stay public; capsules compile only decisions, actions, and quality gates that change the answer.
 
 ## Verifiable release gates
 
-| Gate | v2.0.0 result |
+| Gate | v2.0.1 result |
 | --- | ---: |
-| `SKILL.md` | 7,799 bytes |
-| Largest default task path | 14,299 bytes |
+| `SKILL.md` | 9,225 bytes |
+| Largest default task path (including the 6,000-byte state-summary ceiling) | 22,745 bytes |
 | Default capsules loaded | 1 |
 | State-summary ceiling | 6,000 bytes |
-| Automated tests | 108 run; 1 optional network comparison skipped |
+| Automated tests | 114 run; 1 optional network comparison skipped |
 | Isolated outcome tests | 11 real-task classes |
+| Dossier-first behavior gate | 3 clean sessions passed |
 | Public languages | zh-CN, English, Japanese, Korean, zh-TW |
 
 These numbers constrain context cost; they do not substitute for output quality. All seven task types were also forward-tested in clean, isolated Agent sessions.

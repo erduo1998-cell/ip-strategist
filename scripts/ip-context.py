@@ -328,7 +328,11 @@ def build_context(workdir, task, max_bytes=MAX_OUTPUT_BYTES, today=None):
     text = _read_text(dossier_path)
     if text is None:
         return _render_limited([
-            ("routing", ["- mode: quick", "- task: %s" % task]),
+            ("routing", [
+                "- mode: onboarding_required",
+                "- requested_task: %s" % task,
+                "- required_task: onboarding",
+            ]),
             ("state", ["- dossier: missing", "- onboarding_status: not_started"]),
             ("next", ["- contract_to_open: null"]),
         ], max_bytes)
@@ -338,16 +342,25 @@ def build_context(workdir, task, max_bytes=MAX_OUTPUT_BYTES, today=None):
     status = raw_status if raw_status in IP_CHECK.VALID_ONBOARDING_STATUS else "unknown"
     raw_step = fm.get("onboarding_step", "")
     step = raw_step if raw_step in IP_CHECK.VALID_ONBOARDING_STEPS else "unknown"
+    effective_task = "onboarding" if status == "in_progress" else task
     mode = "onboarding" if status == "in_progress" else "coaching"
     fields = _bold_fields(text)
+    routing = ["- mode: %s" % mode]
+    if status == "in_progress":
+        routing.extend([
+            "- requested_task: %s" % task,
+            "- required_task: onboarding",
+        ])
+    else:
+        routing.append("- task: %s" % task)
     sections = [
-        ("routing", ["- mode: %s" % mode, "- task: %s" % task]),
+        ("routing", routing),
         ("lifecycle", [
             "- onboarding_status: %s" % status,
             "- onboarding_step: %s" % step,
             _line("current_loop", _state_value(text, "当前相")),
             _line("current_stage", _state_value(text, "当前阶段")),
-            _line("default_mode", _state_value(text, "默认模式")),
+            _line("legacy_default_mode", _state_value(text, "默认模式")),
             _line("last_agreement", _state_value(text, "上次会话约定")),
         ]),
     ]
@@ -360,17 +373,17 @@ def build_context(workdir, task, max_bytes=MAX_OUTPUT_BYTES, today=None):
         ]))
 
     selected = []
-    for label in TASK_FIELDS[task]:
+    for label in TASK_FIELDS[effective_task]:
         if label in fields:
             selected.append(_line(label, fields[label]))
     sections.append(("task_relevant_profile", selected or ["- known_profile: none"]))
 
     knowledge = []
-    for value in _evidence(text, task):
+    for value in _evidence(text, effective_task):
         knowledge.append(_line("evidence", value))
-    for value in _learnings(text, task):
+    for value in _learnings(text, effective_task):
         knowledge.append(_line("learning", value))
-    for value in _task_extras(text, task):
+    for value in _task_extras(text, effective_task):
         knowledge.append(_line("task_state", value))
     sections.append(("verified_and_unverified_knowledge", knowledge or ["- task_knowledge: none"]))
 
@@ -389,7 +402,7 @@ def build_context(workdir, task, max_bytes=MAX_OUTPUT_BYTES, today=None):
     sections.append(("largest_unknown", [_line("value", unknown)] if unknown else ["- value: unknown"]))
 
     target = None
-    if task == "review":
+    if effective_task == "review":
         candidates = overdue or reviews
         if candidates:
             target = os.path.abspath(candidates[0][3])

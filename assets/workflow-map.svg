@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
-  <title id="title">ip-strategist unified task routing</title>
-  <desc id="desc">A real request enters one unified entry point, selects one current task capsule, produces a deliverable, then waits for user feedback before routing again.</desc>
+  <title id="title">ip-strategist dossier-first task routing</title>
+  <desc id="desc">A request enters one unified entry point. The system first reads task-relevant dossier evidence and reframes the problem, then selects one task capsule, produces a deliverable, and writes new evidence back to the private dossier.</desc>
   <defs>
     <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
       <stop offset="0" stop-color="#10192d"/>
@@ -24,19 +24,22 @@
     <circle cx="77" cy="66" r="36"/><circle cx="1108" cy="345" r="52"/>
     <path d="M25 318 C190 224 215 400 390 318 S690 230 845 318 S1040 391 1170 302"/>
   </g>
-  <path class="line" d="M230 183 H302"/>
-  <path class="line" d="M503 183 H575"/>
-  <path class="line" d="M776 183 H848"/>
-  <path class="line" d="M1007 243 C987 354 714 372 646 277"/>
+  <path class="line" d="M207 183 H240"/>
+  <path class="line" d="M425 183 H458"/>
+  <path class="line" d="M683 183 H716"/>
+  <path class="line" d="M901 183 H934"/>
+  <path class="line" d="M1100 246 C1080 355 610 377 573 282"/>
   <g filter="url(#shadow)">
-    <rect x="42" y="108" width="188" height="150" rx="22" fill="#223452" stroke="#536b91"/>
-    <rect x="302" y="108" width="201" height="150" rx="22" fill="#2a4564" stroke="#6d8cae"/>
-    <rect x="575" y="88" width="201" height="190" rx="28" fill="#285a5d" stroke="#7ed7c4" stroke-width="2"/>
-    <rect x="848" y="108" width="188" height="150" rx="22" fill="#543d61" stroke="#9a73a4"/>
+    <rect x="37" y="108" width="170" height="150" rx="22" fill="#223452" stroke="#536b91"/>
+    <rect x="240" y="108" width="185" height="150" rx="22" fill="#2a4564" stroke="#6d8cae"/>
+    <rect x="458" y="88" width="225" height="190" rx="28" fill="#285a5d" stroke="#7ed7c4" stroke-width="2"/>
+    <rect x="716" y="108" width="185" height="150" rx="22" fill="#3b5167" stroke="#7894ac"/>
+    <rect x="934" y="108" width="166" height="150" rx="22" fill="#543d61" stroke="#9a73a4"/>
   </g>
-  <text class="step" x="136" y="137">01</text><text class="label" x="136" y="181">真实任务</text><text class="sub" x="136" y="211">目标 · 材料 · 问题</text>
-  <text class="step" x="402" y="137">02</text><text class="label" x="402" y="181">统一入口</text><text class="sub" x="402" y="211">判断唯一主任务</text>
-  <text class="step" x="675" y="124">03</text><text class="label" x="675" y="172">一个任务胶囊</text><text class="sub" x="675" y="204">只加载当前判断</text><text class="sub" x="675" y="232">必要时局部查深层方法</text>
-  <text class="step" x="942" y="137">04</text><text class="label" x="942" y="181">交付结果</text><text class="sub" x="942" y="211">完成当前一步</text>
-  <text class="step" x="821" y="351">USER FEEDBACK · 用户反馈后重新判断</text>
+  <text class="step" x="122" y="137">01</text><text class="label" x="122" y="181">用户表述</text><text class="sub" x="122" y="211">目标 · 材料 · 问题</text>
+  <text class="step" x="332" y="137">02</text><text class="label" x="332" y="181">统一入口</text><text class="sub" x="332" y="211">先过档案状态门</text>
+  <text class="step" x="570" y="124">03 · EVIDENCE FIRST</text><text class="label" x="570" y="170">档案与数据摘要</text><text class="sub" x="570" y="202">根因 · 症状 · 待验证假设</text><text class="sub" x="570" y="232">先重判，再决定做什么</text>
+  <text class="step" x="808" y="137">04</text><text class="label" x="808" y="181">一个任务胶囊</text><text class="sub" x="808" y="211">只加载当前判断</text>
+  <text class="step" x="1017" y="137">05</text><text class="label" x="1017" y="181">交付结果</text><text class="sub" x="1017" y="211">一个可验证动作</text>
+  <text class="step" x="785" y="351">NEW EVIDENCE · 新数据写回私人档案后重新判断</text>
 </svg>

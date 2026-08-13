@@ -26,7 +26,7 @@ class TestOnboardingStructure(unittest.TestCase):
     def test_skill_routes_onboarding_and_capsule_preserves_state_workflow(self):
         skill = read("SKILL.md")
         self.assertIn("`references/task-onboarding.md`", skill)
-        self.assertIn("长期陪跑、第一次建档、补档案缺口", skill)
+        self.assertIn("首次使用、断点续访、补档案缺口", skill)
         self.assertIn("in_progress", skill)
         self.assertIn("provisional", skill)
         self.assertIn("confirmed", skill)
@@ -90,7 +90,7 @@ class TestOnboardingStructure(unittest.TestCase):
             "有明确变现目标",
             "访谈中途退出、下次继续",
             "已有档案只补缺口",
-            "模式 B 拒绝建档",
+            "拒绝建档时有限降级",
             "不把空话写成正式定位",
             "区分事实、假设、未知和验证动作",
         ]
@@ -114,6 +114,22 @@ class TestOnboardingStructure(unittest.TestCase):
         self.assertIn("前测发现", text)
         for number in range(1, 11):
             self.assertIn("| %d." % number, text)
+
+    def test_dossier_first_behavior_gate_records_three_clean_cases(self):
+        cases = read("tests/dossier_first_behavior_cases.md")
+        results = read("tests/dossier_first_behavior_results.md")
+        for phrase in [
+            "首次真实任务不能绕过建档",
+            "建档中途不能被新任务带走",
+            "已有档案必须纠正表层问题",
+            "必须全部通过",
+        ]:
+            self.assertIn(phrase, cases)
+        self.assertIn("Claude Code 2.1.220", results)
+        self.assertIn("三次互不共享上下文", results)
+        self.assertIn("Codex CLI 的两次独立尝试均在模型采样层超时", results)
+        for number in range(1, 4):
+            self.assertIn("| %d." % number, results)
 
     def test_empty_positioning_phrases_are_explicitly_rejected(self):
         corpus = "\n".join([

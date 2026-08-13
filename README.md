@@ -1,14 +1,14 @@
 # ip-strategist
 
-> 把你的真实问题交给 AI IP 教练：先给判断，再给成品，最后只留下一个能验证的下一步。
+> 先建立你的私人 IP 档案。以后每次提问，先用档案和数据判断你说的是根因还是症状，再给成品和一个可验证的下一步。
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [繁體中文](README.zh-TW.md)
 
 <p>
-  <a href="VERSION"><img alt="Version 2.0.0" src="https://img.shields.io/badge/version-2.0.0-286A51?style=flat-square"></a>
+  <a href="VERSION"><img alt="Version 2.0.1" src="https://img.shields.io/badge/version-2.0.1-286A51?style=flat-square"></a>
   <a href="https://skills.sh/erduo1998-cell/ip-strategist"><img alt="skills.sh" src="https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square"></a>
   <a href="LICENSE"><img alt="CC BY-NC 4.0" src="https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square"></a>
-  <a href="https://github.com/erduo1998-cell/ip-strategist/actions"><img alt="Tests 108" src="https://img.shields.io/badge/tests-108%20checks-286A51?style=flat-square"></a>
+  <a href="https://github.com/erduo1998-cell/ip-strategist/actions"><img alt="Tests 114" src="https://img.shields.io/badge/tests-114%20checks-286A51?style=flat-square"></a>
 </p>
 
 **支持 Codex、Claude Code，以及其他支持 Agent Skills 的宿主。** 自然语言是通用入口；宿主支持时也可以使用 `/ip-strategist`。
@@ -19,7 +19,7 @@
 
 ## 你不需要先学会怎么用它
 
-直接说你现在卡在哪。`ip-strategist` 会从对话里判断唯一主任务，只加载一个任务胶囊，直接完成交付；只有遇到真实冲突或你追问依据时，才局部查询深层方法论。
+第一次使用先完成一份六模块私人档案；它不是通讯录，而是目标、真实经历与证据、用户、价值、业务、执行约束和后续数据的判断底座。建档后你只需说现在卡在哪，`ip-strategist` 会先读取当前任务相关摘要，判断这是根因、症状、待验证假设还是与证据冲突，再只加载一个任务胶囊完成交付。
 
 | 你现在的真实处境 | 它会交付什么 |
 | --- | --- |
@@ -49,27 +49,26 @@ npx -y skills add erduo1998-cell/ip-strategist -g \
 
 Claude Code 把 `codex` 改成 `claude-code`。不要默认使用 `--all`：它会写入 CLI 检测到的所有 Agent。
 
-### 2. 新建会话，直接交任务
+### 2. 新建会话，先建立私人档案
 
 ```text
-我做企业 AI 咨询，但内容一会讲工具一会讲管理。
-帮我重新做定位、目标人群和 3 个内容支柱。
+第一次使用 ip-strategist，帮我建立私人 IP 档案。
 ```
 
-信息够就直接给结果；只有缺少会改变判断的事实时，才追问一个关键问题。
+Agent 会先说明档案保存位置和隐私边界，取得一次同意后开始六模块访谈；每次只问一个关键问题，可以中断续访。完整草案经你一次确认进入 `provisional` 后，才开始处理定位、选题、写稿、增长、复盘或变现。
 
-### 3. 把结果或新事实继续交回来
+### 3. 以后直接交任务和新数据
 
 ```text
-我按这个定位发了 6 条，第二类内容咨询最多。
-下一批只改什么？
+我按上次定位发了 6 条，第二类内容咨询最多，但涨粉不多。
+先判断这是不是我现在真正该解决的问题，再告诉我下一批只改什么。
 ```
 
-它会根据新证据重新判断当前一步，不自动安排一条漫长流程。
+它会把这条表述与档案目标、历史数据和已有认知对照后再处理，不顺着表层问题直接开药方。
 
 ## 一条真实问题怎么变成结果
 
-下面是一个**虚构数据演示**：用户只提交“播放 12 万，为什么只涨了 80 个粉？”，入口选择增长胶囊，给出核心判断和下一批动作。
+下面是一个**虚构数据演示**：用户问“播放 12 万，为什么只涨了 80 个粉？”，入口先读取任务相关档案与数据，把“涨粉少”从表层症状重判成需要验证的未来价值问题，再选择增长胶囊给出动作。
 
 [![虚构演示：真实问题进入统一入口，只加载增长胶囊，然后交付判断和下一批动作](assets/ip-strategist-demo.gif)](assets/ip-strategist-demo.mp4)
 
@@ -85,7 +84,7 @@ Claude Code 把 `codex` 改成 `claude-code`。不要默认使用 `--all`：它�
 | <!-- capability:growth --> **起号、涨粉、做系列** | 账号现象、主页和内容表现 | 增长诊断、记忆资产、系列结构与下一批实验 |
 | <!-- capability:review --> **复盘已发内容** | 内容样本、播放、互动和转化 | 数据归因、变量判断和下一批动作 |
 | <!-- capability:monetization --> **规划内容变现** | 业务、产品、客单价和线索 | 变现路径、内容承接和验证顺序 |
-| <!-- capability:onboarding --> **长期陪跑** | 目标、经历和已有档案 | 建档、判断契约、断点续访与跨会话复盘 |
+| <!-- capability:onboarding --> **建立判断底座** | 首次使用、断点或档案缺口 | 私人档案、依据账本、断点续访与跨会话复盘 |
 
 熟悉后可以在同一入口后加意图词：
 
@@ -102,23 +101,25 @@ Claude Code 把 `codex` 改成 `claude-code`。不要默认使用 `--all`：它�
 
 ![真实任务经过统一入口，只进入一个当前任务胶囊；交付后等待用户反馈，再重新判断](assets/workflow-map.svg)
 
+- **档案先行**：首次使用必须先建档；未完成时，新任务只作为证据和待办，不得绕过。
+- **每次重判**：正式任务先读取相关档案与数据摘要，把用户表述判为根因、症状或待验证假设。
 - **一个入口**：用户不需要先研究内部能力目录。
 - **一个当前任务**：最终交付物决定唯一主路由；明确要求两个独立成品时才顺序执行。
-- **一个胶囊**：普通任务只加载 `SKILL.md + 一个 task-*`，不默认通读 `references/00-11`。
-- **快速模式默认**：一次性问题不建档、不读取私人状态。
-- **陪跑状态有界**：只在用户明确长期跟进时读取任务相关摘要，需要复盘才打开被点名的单个契约。
+- **一个胶囊**：正式任务只加载 `SKILL.md + 任务相关状态摘要 + 一个 task-*`，不默认通读 `references/00-11`。
+- **隐私边界明确**：档案只在用户工作目录；明确拒绝或宿主无法安全读写时，只能提供标明低置信度、不沉淀的有限分析。
 - **方法论没有删除**：深层原件仍公开保留，胶囊只编译会改变答案的判断、动作和质量门。
 
 ## 可复核的发布门
 
-| 项目 | v2.0.0 结果 |
+| 项目 | v2.0.1 结果 |
 | --- | ---: |
-| `SKILL.md` | 7,799 bytes |
-| 最大默认任务路径 | 14,299 bytes |
+| `SKILL.md` | 9,225 bytes |
+| 最大默认任务路径（含 6,000-byte 状态摘要上限） | 22,745 bytes |
 | 默认加载胶囊 | 1 个 |
 | 状态摘要上限 | 6,000 bytes |
-| 自动化测试 | 108 项运行，1 项可选在线比对跳过 |
+| 自动化测试 | 114 项运行，1 项可选在线比对跳过 |
 | 隔离成品门 | 11 类真实任务通过 |
+| 档案优先行为门 | 3 个干净会话全部通过 |
 | 公开语言 | 简中、英语、日语、韩语、繁中 |
 
 这些数字约束上下文负担，不冒充成品质量；定位、选题、写稿、增长、复盘、变现和建档还分别经过互不共享上下文的干净 Agent 测试。

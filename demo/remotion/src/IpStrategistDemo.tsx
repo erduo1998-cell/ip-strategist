@@ -82,7 +82,7 @@ const Badge: React.FC<{children: React.ReactNode; active?: boolean}> = ({childre
 );
 
 const PromptStage: React.FC<{frame: number}> = ({frame}) => {
-  const opacity = stageOpacity(frame, 0, 112);
+  const opacity = stageOpacity(frame, 0, 92);
   const card = enter(frame, 4, 18);
   const typed = Math.floor(interpolate(frame, [24, 86], [0, 24], clamp));
   const full = '播放 12 万，为什么只涨了 80 个粉？';
@@ -99,7 +99,7 @@ const PromptStage: React.FC<{frame: number}> = ({frame}) => {
         }}
       >
         <div style={{fontSize: 18, color: COLORS.muted, fontWeight: 700, marginBottom: 16}}>
-          直接说真实问题，不用先学方法
+          用户说的是现象，不先把它当结论
         </div>
         <div
           style={{
@@ -130,21 +130,73 @@ const PromptStage: React.FC<{frame: number}> = ({frame}) => {
           transform: `translateX(${(1 - enter(frame, 82, 12)) * 18}px)`,
         }}
       >
-        一句话，开始工作 →
+          先回到档案和数据 →
+      </div>
+    </div>
+  );
+};
+
+const EvidenceStage: React.FC<{frame: number}> = ({frame}) => {
+  const opacity = stageOpacity(frame, 92, 208);
+  const card = enter(frame, 100, 18);
+  const reframe = enter(frame, 152, 18);
+  return (
+    <div style={{position: 'absolute', inset: 0, opacity}}>
+      <div style={{position: 'absolute', top: 130, left: 0, right: 0, textAlign: 'center'}}>
+        <div style={{fontSize: 19, color: COLORS.muted, fontWeight: 750}}>任务相关摘要 · 私人档案不离开工作目录</div>
+        <div style={{fontSize: 43, fontWeight: 860, letterSpacing: -1.8, marginTop: 8}}>先用证据重判问题</div>
+      </div>
+      <div
+        style={{
+          position: 'absolute',
+          left: 140,
+          right: 140,
+          top: 270,
+          display: 'grid',
+          gridTemplateColumns: '1fr 1.15fr',
+          gap: 18,
+          opacity: card,
+          transform: `translateY(${(1 - card) * 20}px)`,
+        }}
+      >
+        <div style={{background: COLORS.panel, border: `1px solid ${COLORS.line}`, borderRadius: 24, padding: 27}}>
+          <div style={{color: COLORS.green, fontSize: 16, fontWeight: 850}}>档案与历史数据</div>
+          <div style={{fontSize: 22, fontWeight: 780, marginTop: 17}}>90 天目标：合格咨询，不是泛粉丝</div>
+          <div style={{fontSize: 18, color: COLORS.muted, lineHeight: 1.6, marginTop: 13}}>
+            待验证认知：工具清单带来收藏，<br />但未证明持续关注与业务承接。
+          </div>
+        </div>
+        <div
+          style={{
+            background: COLORS.ink,
+            color: COLORS.paper,
+            borderRadius: 24,
+            padding: 27,
+            opacity: reframe,
+            transform: `translateX(${(1 - reframe) * 22}px)`,
+          }}
+        >
+          <div style={{color: COLORS.lime, fontSize: 16, fontWeight: 850}}>问题重判</div>
+          <div style={{fontSize: 20, color: '#BFC8C3', marginTop: 16}}>表层症状：播放高但涨粉少</div>
+          <div style={{height: 1, background: 'rgba(255,255,255,.17)', margin: '16px 0'}} />
+          <div style={{fontSize: 26, lineHeight: 1.35, fontWeight: 820}}>
+            真正要验证：未来价值是否断裂，<br />以及是否吸来目标用户
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
 const RouterStage: React.FC<{frame: number}> = ({frame}) => {
-  const opacity = stageOpacity(frame, 112, 248);
+  const opacity = stageOpacity(frame, 205, 305);
   const labels = ['定位', '选题', '写稿', '增长', '复盘', '变现', '陪跑'];
-  const chosen = enter(frame, 166, 20);
-  const pulse = 1 + Math.sin((frame - 166) / 6) * 0.018 * chosen;
+  const chosen = enter(frame, 250, 18);
+  const pulse = 1 + Math.sin((frame - 250) / 6) * 0.018 * chosen;
   return (
     <div style={{position: 'absolute', inset: 0, opacity}}>
       <div style={{position: 'absolute', top: 168, left: 0, right: 0, textAlign: 'center'}}>
-        <div style={{fontSize: 20, color: COLORS.muted, fontWeight: 700}}>统一入口读懂当前任务</div>
+        <div style={{fontSize: 20, color: COLORS.muted, fontWeight: 700}}>完成重判后，才确定当前任务</div>
         <div style={{fontSize: 46, fontWeight: 850, letterSpacing: -2, marginTop: 8}}>
           只点亮一个任务胶囊
         </div>
@@ -161,7 +213,7 @@ const RouterStage: React.FC<{frame: number}> = ({frame}) => {
         }}
       >
         {labels.map((label, index) => {
-          const itemEnter = enter(frame, 130 + index * 5, 14);
+          const itemEnter = enter(frame, 218 + index * 4, 12);
           const active = label === '增长';
           return (
             <div
@@ -186,7 +238,7 @@ const RouterStage: React.FC<{frame: number}> = ({frame}) => {
           display: 'flex',
           alignItems: 'center',
           gap: 16,
-          opacity: enter(frame, 184, 16),
+          opacity: enter(frame, 266, 14),
         }}
       >
         <div style={{height: 1, width: 96, background: COLORS.line}} />
@@ -199,8 +251,8 @@ const RouterStage: React.FC<{frame: number}> = ({frame}) => {
           top: 494,
           left: '50%',
           width: 435,
-          transform: `translateX(-50%) translateY(${(1 - enter(frame, 196, 18)) * 18}px)`,
-          opacity: enter(frame, 196, 18),
+          transform: `translateX(-50%) translateY(${(1 - enter(frame, 274, 14)) * 18}px)`,
+          opacity: enter(frame, 274, 14),
           background: COLORS.ink,
           color: COLORS.paper,
           borderRadius: 22,
@@ -219,10 +271,10 @@ const RouterStage: React.FC<{frame: number}> = ({frame}) => {
 };
 
 const ResultStage: React.FC<{frame: number}> = ({frame}) => {
-  const opacity = stageOpacity(frame, 248, 430);
-  const card = spring({frame: frame - 256, fps: 30, config: {damping: 18, stiffness: 120}});
-  const rate = interpolate(frame, [285, 330], [0, 0.067], clamp).toFixed(3);
-  const action = enter(frame, 338, 18);
+  const opacity = stageOpacity(frame, 302, 430);
+  const card = spring({frame: frame - 308, fps: 30, config: {damping: 18, stiffness: 120}});
+  const rate = interpolate(frame, [326, 356], [0, 0.067], clamp).toFixed(3);
+  const action = enter(frame, 360, 16);
   return (
     <div style={{position: 'absolute', inset: 0, opacity}}>
       <div
@@ -250,11 +302,11 @@ const ResultStage: React.FC<{frame: number}> = ({frame}) => {
         >
           <div style={{fontSize: 16, color: COLORS.muted, fontWeight: 800}}>核心判断</div>
           <div style={{fontSize: 40, lineHeight: 1.16, fontWeight: 880, letterSpacing: -1.7, marginTop: 16}}>
-            这是一条
+            粉丝少是
             <br />
-            <span style={{color: COLORS.coral}}>一次性赞藏型</span>
+            <span style={{color: COLORS.coral}}>症状</span>
             <br />
-            内容
+            不是诊断
           </div>
           <div style={{height: 1, background: COLORS.line, margin: '28px 0 22px'}} />
           <div style={{display: 'flex', alignItems: 'flex-end', gap: 11}}>
@@ -262,7 +314,7 @@ const ResultStage: React.FC<{frame: number}> = ({frame}) => {
             <div style={{fontSize: 16, color: COLORS.muted, fontWeight: 700, paddingBottom: 9}}>播放转粉率</div>
           </div>
           <div style={{color: COLORS.muted, fontSize: 17, lineHeight: 1.55, marginTop: 8}}>
-            观众拿完工具名单，关系就结束了。
+            待验证：一次性价值是否切断了未来价值。
           </div>
         </div>
         <div
@@ -297,7 +349,7 @@ const ResultStage: React.FC<{frame: number}> = ({frame}) => {
           </div>
           <div style={{marginTop: 28, display: 'grid', gap: 12}}>
             {['固定一种目标人群', '每期跑通一个真实任务', '结尾预告下一期具体问题'].map((text, index) => {
-              const item = enter(frame, 338 + index * 8, 16);
+              const item = enter(frame, 360 + index * 7, 14);
               return (
                 <div
                   key={text}
@@ -380,9 +432,10 @@ export const IpStrategistDemo: React.FC = () => {
           fontWeight: 750,
         }}
       >
-        虚构演示 · 一个入口 · 一个当前任务 · 一个可用结果
+        虚构演示 · 档案与数据先行 · 重判问题 · 一个可用结果
       </div>
       <PromptStage frame={frame} />
+      <EvidenceStage frame={frame} />
       <RouterStage frame={frame} />
       <ResultStage frame={frame} />
       <div
@@ -399,7 +452,7 @@ export const IpStrategistDemo: React.FC = () => {
           fontWeight: 700,
         }}
       >
-        <span>真实问题 → 唯一胶囊 → 直接交付</span>
+        <span>用户表述 → 档案与数据 → 问题重判 → 唯一胶囊 → 交付</span>
         <span style={{color: COLORS.green}}>ip-strategist v2</span>
       </div>
     </AbsoluteFill>

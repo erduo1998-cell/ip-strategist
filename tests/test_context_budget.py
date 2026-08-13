@@ -29,7 +29,7 @@ class TestContextBudget(unittest.TestCase):
             with self.subTest(capsule=capsule.name):
                 size = capsule.stat().st_size
                 self.assertLessEqual(size, 16_000)
-                self.assertLessEqual(skill_size + size, 28_000)
+                self.assertLessEqual(skill_size + size + 6_000, 28_000)
 
     def test_skill_frontmatter_only_has_name_and_description(self):
         text = SKILL.read_text(encoding="utf-8")
@@ -43,7 +43,7 @@ class TestContextBudget(unittest.TestCase):
         self.assertNotIn("读取回执", text)
         self.assertNotIn("十二个维度文件", text)
         self.assertIn("普通任务不得默认读取", text)
-        self.assertIn("一个主任务并立即执行", text)
+        self.assertIn("所有正式任务都消费", text)
 
     def test_capsules_are_closed_and_have_uniform_sections(self):
         required = [
@@ -63,6 +63,15 @@ class TestContextBudget(unittest.TestCase):
                     self.assertIn(heading, text)
                 for other in capsule_names - {capsule.name}:
                     self.assertNotIn(other, text, "胶囊不得把另一胶囊设为前置")
+
+    def test_each_business_capsule_rejects_missing_or_in_progress_dossier(self):
+        for capsule in CAPSULES:
+            if capsule.name == "task-onboarding.md":
+                continue
+            text = capsule.read_text(encoding="utf-8")
+            with self.subTest(capsule=capsule.name):
+                self.assertIn("已通过档案门并取得", text)
+                self.assertIn("缺档案或建档为 `in_progress` 时不得执行本胶囊", text)
 
     def test_deep_references_are_conditional_not_default(self):
         skill = SKILL.read_text(encoding="utf-8")
