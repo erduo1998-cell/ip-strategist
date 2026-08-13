@@ -2,6 +2,8 @@
 
 Copyright © 2026 erduo1998-cell（耳总）。保留未由许可明确授予的权利。
 
+当前发布版本为 **v2.0.1**；许可沿用 v2.0.0 起生效的范围与边界。
+
 ## 当前许可
 
 自 **v2.0.0** 起，本仓库中由许可方拥有权利的内容，包括方法论文档、任务胶囊、Skill 指令、脚本、模板、测试、原创图形和生成式视觉资产，统一按 [Creative Commons Attribution-NonCommercial 4.0 International](LICENSE)（CC BY-NC 4.0）授权。

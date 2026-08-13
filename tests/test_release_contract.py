@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "2.0.0"
+VERSION = "2.0.1"
 PUBLIC_DOCS = [
     "README.md",
     "README.en.md",
@@ -31,7 +31,7 @@ class ReleaseContractTests(unittest.TestCase):
                 self.assertIn(VERSION, self.read(relative))
 
     def test_expected_release_tag_matches_version(self):
-        self.assertEqual(f"v{self.read('VERSION').strip()}", "v2.0.0")
+        self.assertEqual(f"v{self.read('VERSION').strip()}", "v2.0.1")
 
     def test_openai_metadata_matches_unified_entry(self):
         text = self.read("agents/openai.yaml")
@@ -102,6 +102,8 @@ class ReleaseContractTests(unittest.TestCase):
         self.assertIn("<desc", text)
         body = text.replace('xmlns="http://www.w3.org/2000/svg"', "")
         self.assertNotRegex(body, r"<script|javascript:|https?://", re.IGNORECASE)
+        self.assertIn("档案与数据摘要", text)
+        self.assertIn("根因 · 症状 · 待验证假设", text)
 
     def test_remotion_demo_is_reproducible_and_bounded(self):
         package = json.loads(self.read("demo/remotion/package.json"))
@@ -112,6 +114,9 @@ class ReleaseContractTests(unittest.TestCase):
         self.assertIn("--muted", package["scripts"]["render"])
         source = self.read("demo/remotion/src/IpStrategistDemo.tsx")
         self.assertIn("虚构演示", source)
+        self.assertIn("档案与历史数据", source)
+        self.assertIn("问题重判", source)
+        self.assertIn("表层症状", source)
         self.assertNotRegex(source, r"https?://|fetch\(|Math\.random")
         expected = {
             "assets/ip-strategist-demo.gif": 1_500_000,

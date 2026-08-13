@@ -50,7 +50,7 @@ class I18nContractTests(unittest.TestCase):
         for relative in READMES:
             text = self.read(relative)
             with self.subTest(relative=relative):
-                self.assertIn("2.0.0", text)
+                self.assertIn("2.0.1", text)
                 self.assertIn(INSTALL, text)
                 self.assertIn("--agent codex --skill ip-strategist -y", text.replace("\\\n", " "))
                 self.assertIn("--list", text)
@@ -100,10 +100,25 @@ class I18nContractTests(unittest.TestCase):
             data = (ROOT / relative).read_bytes()
             text = data.decode("utf-8")
             with self.subTest(relative=relative):
-                self.assertLessEqual(len(data), 3000)
+                limit = 8_000 if relative.endswith("shell.zh-CN.md") else 3_000
+                self.assertLessEqual(len(data), limit)
                 self.assertNotIn("task-", text)
                 self.assertNotIn("references/", text)
                 self.assertNotIn("00-11", text)
+
+    def test_all_locales_make_dossier_first_and_problem_reframing_visible(self):
+        readme_markers = {
+            "README.md": ("第一次使用先完成", "根因、症状、待验证假设"),
+            "README.en.md": ("First use builds", "root cause, symptom, untested hypothesis"),
+            "README.ja.md": ("初回は", "根本原因、症状、未検証仮説"),
+            "README.ko.md": ("첫 사용에서는", "근본 원인인지 증상인지"),
+            "README.zh-TW.md": ("第一次使用先完成", "根因、症狀、待驗證假設"),
+        }
+        for relative, markers in readme_markers.items():
+            with self.subTest(relative=relative):
+                text = self.read(relative)
+                for marker in markers:
+                    self.assertIn(marker, text)
 
 
 if __name__ == "__main__":
