@@ -27,7 +27,7 @@ CAPABILITIES = {
     "monetization",
     "onboarding",
 }
-INSTALL = "npx -y skills add erduo1998-cell/ip-strategist -g --all"
+INSTALL = "npx -y skills add erduo1998-cell/ip-strategist -g"
 
 
 class I18nContractTests(unittest.TestCase):
@@ -52,6 +52,8 @@ class I18nContractTests(unittest.TestCase):
             with self.subTest(relative=relative):
                 self.assertIn("2.0.0", text)
                 self.assertIn(INSTALL, text)
+                self.assertIn("--agent codex --skill ip-strategist -y", text.replace("\\\n", " "))
+                self.assertIn("--list", text)
                 self.assertIn("CC BY-NC 4.0", text)
                 self.assertIn("](LICENSE)", text)
                 self.assertIn("](NOTICE.md)", text)
@@ -59,6 +61,10 @@ class I18nContractTests(unittest.TestCase):
                 self.assertIn("git pull --ff-only", text)
                 self.assertIn("更新 ip-strategist", text)
                 self.assertIn("--agent", text)
+                self.assertIn("assets/ip-strategist-demo.gif", text)
+                self.assertIn("assets/ip-strategist-demo.mp4", text)
+                self.assertIn("demo/remotion/", text)
+                self.assertIn('src="assets/wechat-qrcode.jpg"', text)
 
     def test_each_readme_has_exactly_seven_capability_markers(self):
         marker = re.compile(r"<!-- capability:([a-z-]+) -->")
@@ -76,7 +82,18 @@ class I18nContractTests(unittest.TestCase):
                 self.assertGreaterEqual(len(matches), 2)
                 for alt, target in matches:
                     self.assertTrue(alt.strip())
+                    if target.startswith(("http://", "https://")):
+                        continue
                     self.assertTrue((ROOT / target).is_file(), target)
+
+    def test_install_defaults_to_one_explicit_agent(self):
+        for relative in READMES:
+            text = self.read(relative)
+            with self.subTest(relative=relative):
+                scoped = text.find("--agent codex --skill ip-strategist -y")
+                all_agents = text.find("-g --all")
+                self.assertGreaterEqual(scoped, 0)
+                self.assertGreater(all_agents, scoped)
 
     def test_shells_are_short_and_do_not_leak_internal_routing(self):
         for relative in SHELLS:

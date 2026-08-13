@@ -19,6 +19,8 @@ htmlcov/
 .venv/
 venv/
 env/
+demo/remotion/node_modules/
+demo/remotion/out/
 
 # 创作者敏感数据（建议默认忽略，按需自行决定是否注释掉）
 ip-dossier.md
