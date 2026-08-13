@@ -4,7 +4,7 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [繁體中文](README.zh-TW.md)
 
-[![Version 2.0.1](https://img.shields.io/badge/version-2.0.1-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![Tests 114](https://img.shields.io/badge/tests-114%20checks-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
+[![Version 2.0.1](https://img.shields.io/badge/version-2.0.1-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![Tests 115](https://img.shields.io/badge/tests-115%20checks-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
 
 **Codex, Claude Code 및 Agent Skills를 지원하는 호스트에서 사용할 수 있습니다.** 자연어가 공통 입구이며, 지원 호스트에서는 `/ip-strategist`도 사용할 수 있습니다.
 
@@ -79,7 +79,7 @@ Agent는 저장 위치와 개인정보 경계를 설명하고 동의를 한 번 
 
 ## 검증 가능한 릴리스 기준
 
-`SKILL.md` 9,225 bytes, 6,000-byte 상태 요약 상한을 포함한 최대 기본 경로 22,745 bytes, 기본 캡슐 1개, 상태 요약 6,000 bytes 이하, 자동 테스트 114개 실행(선택적 온라인 비교 1개 건너뜀), 격리된 결과 테스트 11종, 기록 우선 행동 테스트 3세션, 공개 언어 5개.
+`SKILL.md` 9,225 bytes, 6,000-byte 상태 요약 상한을 포함한 최대 기본 경로 22,745 bytes, 기본 캡슐 1개, 상태 요약 6,000 bytes 이하, 자동 테스트 115개 실행(선택적 온라인 비교 1개 건너뜀), 격리된 결과 테스트 11종, 기록 우선 행동 테스트 4세션, 공개 언어 5개.
 
 ## 설치
 

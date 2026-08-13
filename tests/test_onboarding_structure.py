@@ -115,20 +115,21 @@ class TestOnboardingStructure(unittest.TestCase):
         for number in range(1, 11):
             self.assertIn("| %d." % number, text)
 
-    def test_dossier_first_behavior_gate_records_three_clean_cases(self):
+    def test_dossier_first_behavior_gate_records_four_clean_cases(self):
         cases = read("tests/dossier_first_behavior_cases.md")
         results = read("tests/dossier_first_behavior_results.md")
         for phrase in [
             "首次真实任务不能绕过建档",
             "建档中途不能被新任务带走",
             "已有档案必须纠正表层问题",
+            "新手教程必须讲清完整概念地图",
             "必须全部通过",
         ]:
             self.assertIn(phrase, cases)
         self.assertIn("Claude Code 2.1.220", results)
-        self.assertIn("三次互不共享上下文", results)
+        self.assertIn("四次互不共享上下文", results)
         self.assertIn("Codex CLI 的两次独立尝试均在模型采样层超时", results)
-        for number in range(1, 4):
+        for number in range(1, 5):
             self.assertIn("| %d." % number, results)
 
     def test_empty_positioning_phrases_are_explicitly_rejected(self):

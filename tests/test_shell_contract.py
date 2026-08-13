@@ -16,7 +16,44 @@ class TestShellContract(unittest.TestCase):
             path = ROOT / "references" / f"shell.{locale}.md"
             with self.subTest(locale=locale):
                 self.assertTrue(path.is_file())
-                self.assertLessEqual(path.stat().st_size, 2_500)
+                limit = 8_000 if locale == "zh-CN" else 2_500
+                self.assertLessEqual(path.stat().st_size, limit)
+
+    def test_zh_cn_shell_explains_the_complete_concept_map(self):
+        text = read("references/shell.zh-CN.md")
+        for concept in [
+            "四相",
+            "四阶段",
+            "六模块",
+            "七任务",
+            "三桶选题",
+            "两轨认知",
+            "依据账本",
+            "契约生命周期",
+        ]:
+            self.assertIn(concept, text)
+
+        for phase in ["诊", "契", "行", "盘"]:
+            self.assertIn(f"**{phase}**", text)
+        for stage in ["起号期", "稳定上升期", "瓶颈期", "爆款后续航"]:
+            self.assertIn(stage, text)
+        for module in ["目标", "证据", "用户", "价值", "业务", "执行"]:
+            self.assertIn(f"**{module}**", text)
+        for task in ["建档", "定位", "选题", "写稿", "增长", "复盘", "变现"]:
+            self.assertIn(task, text)
+        for bucket in ["**扩**", "**砍**", "**测**"]:
+            self.assertIn(bucket, text)
+        for state in [
+            "已确认事实 / 暂定假设 / 未知",
+            "已验证 / 待验证 / 已证伪",
+            "待发布 → 待复盘 → 已复盘",
+            "已废弃",
+        ]:
+            self.assertIn(state, text)
+
+        self.assertIn("一套管今天，一套管长期", text)
+        self.assertIn("只留在你的私人档案，不外流", text)
+        self.assertLess(text.index("你是否同意"), text.index("为什么现在做 IP"))
 
     def test_shell_teaches_real_task_and_single_step(self):
         corpus = "\n".join(

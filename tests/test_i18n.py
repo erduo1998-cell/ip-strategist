@@ -100,7 +100,8 @@ class I18nContractTests(unittest.TestCase):
             data = (ROOT / relative).read_bytes()
             text = data.decode("utf-8")
             with self.subTest(relative=relative):
-                self.assertLessEqual(len(data), 3000)
+                limit = 8_000 if relative.endswith("shell.zh-CN.md") else 3_000
+                self.assertLessEqual(len(data), limit)
                 self.assertNotIn("task-", text)
                 self.assertNotIn("references/", text)
                 self.assertNotIn("00-11", text)
