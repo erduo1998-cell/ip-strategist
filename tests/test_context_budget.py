@@ -84,6 +84,37 @@ class TestContextBudget(unittest.TestCase):
             with self.subTest(capsule=capsule.name):
                 self.assertTrue(all(position > map_pos for position in matches))
 
+    def test_shared_direction_is_inherited_without_an_eighth_capsule(self):
+        skill = SKILL.read_text(encoding="utf-8")
+        self.assertIn("`shared_direction_input`", skill)
+        self.assertIn("只读、不落盘、不成为第二事实源", skill)
+        self.assertIn("不得因此新增确认、串行七任务或加载第二个胶囊", skill)
+
+        business = [path for path in CAPSULES if path.name != "task-onboarding.md"]
+        for capsule in business:
+            with self.subTest(capsule=capsule.name):
+                text = capsule.read_text(encoding="utf-8")
+                self.assertIn("`shared_direction_input`", text)
+                self.assertIn("局部", text)
+        self.assertNotIn(
+            "`shared_direction_input`",
+            (ROOT / "references" / "task-onboarding.md").read_text(encoding="utf-8"),
+        )
+
+    def test_content_jobs_and_runtime_project_layer_keep_existing_state_contracts(self):
+        topic = (ROOT / "references" / "task-topic.md").read_text(encoding="utf-8")
+        script = (ROOT / "references" / "task-script.md").read_text(encoding="utf-8")
+        growth = (ROOT / "references" / "task-growth.md").read_text(encoding="utf-8")
+        review = (ROOT / "references" / "task-review.md").read_text(encoding="utf-8")
+        monetization = (ROOT / "references" / "task-monetization.md").read_text(encoding="utf-8")
+        for text in (topic, script):
+            self.assertIn("`Audience Job`", text)
+            self.assertIn("`IP Job`", text)
+        self.assertIn("运行时内容项目卡", growth)
+        self.assertIn("不新增 schema、持久化状态或必答问卷", growth)
+        self.assertIn("局部传播成功、IP 积累失败", review)
+        self.assertIn("证据断层", monetization)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -4,7 +4,7 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [繁體中文](README.zh-TW.md)
 
-[![Version 2.0.1](https://img.shields.io/badge/version-2.0.1-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![Tests 115](https://img.shields.io/badge/tests-115%20checks-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
+[![Version 2.1.0](https://img.shields.io/badge/version-2.1.0-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![Tests 129](https://img.shields.io/badge/tests-129%20checks-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
 
 **For Codex, Claude Code, and other hosts that support Agent Skills.** Natural language is the universal entry point; `/ip-strategist` also works where named Skill invocation is supported.
 
@@ -104,18 +104,18 @@ Intent words may follow the same entry point; they are not separate Skills:
 
 ## Verifiable release gates
 
-| Gate | v2.0.1 result |
+| Gate | v2.1.0 result |
 | --- | ---: |
-| `SKILL.md` | 9,225 bytes |
-| Largest default task path (including the 6,000-byte state-summary ceiling) | 22,745 bytes |
+| `SKILL.md` | 10,384 bytes |
+| Largest default task path (including the 6,000-byte state-summary ceiling) | 24,371 bytes |
 | Default capsules loaded | 1 |
 | State-summary ceiling | 6,000 bytes |
-| Automated tests | 115 run; 1 optional network comparison skipped |
-| Isolated outcome tests | 11 real-task classes |
-| Dossier-first behavior gate | 4 clean sessions passed |
+| Automated tests | 129 run; 1 optional network comparison skipped |
+| v2.1 fresh behavior gate | All seven task types have clean evidence dated 2026-08-17 |
+| Dossier-first historical baseline | 4 clean sessions passed on 2026-08-13 |
 | Public languages | zh-CN, English, Japanese, Korean, zh-TW |
 
-These numbers constrain context cost; they do not substitute for output quality. All seven task types were also forward-tested in clean, isolated Agent sessions.
+These numbers constrain context cost; they do not substitute for output quality. All seven task types have clean Agent evidence dated 2026-08-17. Each result states its actual coverage, and untested observation cases are not counted as passes.
 
 ## Install
 

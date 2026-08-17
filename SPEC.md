@@ -34,6 +34,16 @@
 
 建档必须先说明存放位置、内容与隐私边界并取得一次许可。许可后的六模块访谈每次只问一个核心问题，完整草案经一次确认后进入 `provisional`。
 
+## 共享 IP 定调层
+
+`provisional` / `confirmed` 的六个正式业务任务必须继承同一份 `shared_direction_input`。它由 `ip-context.py` 从现有 dossier 固定字段、内容支柱、当前主识别点、依据账本与已验证内容认知中安全提取；共同证据不得按任务关键词筛选，六个任务得到的共同段必须逐字一致。脚本只做选择、转义、去重和截断，不生成定位、核心张力、人设或冲突结论。
+
+Agent 用共同输入形成只存在于当次运行的 `IP Direction Snapshot`。直接字段按原意继承；综合维度证据不足时标未知或暂定假设。`ready / partial / conflicted` 不是 dossier 状态，不落盘、不新增 schema、不成为第二事实源。真实方向冲突才向用户展示必要差异；战术偏离改当前方案，新证据推翻底座则经用户确认后仍写回原 dossier 字段与修订留痕。
+
+定位与单条内容之间允许使用运行时“内容项目 / 系列”中间层；topic 与 script 为每条内容确定具体 `Audience Job` 和一个主 `IP Job`，review 同时检查局部效果与长期积累。首版兼容读取旧五列系列表，但不把它伪装成完整项目卡，不持久化扩展字段，也不增加第八胶囊、默认必读文件、确认步骤或契约机器字段。
+
+这一层只借鉴山音「超级导演大师」公开材料中的“全局定调—逐层继承—整体检查”通用系统原则，不复制导演模板、风格库或具体表达：[SKILL.md](https://github.com/Shanyin-ai/shanyin-director-master/blob/main/director-master/SKILL.md)、[core-methodology.md](https://github.com/Shanyin-ai/shanyin-director-master/blob/main/director-master/references/core-methodology.md)。具体 IP 判断仍以耳总现有方法论、用户 dossier 事实与可验证证据为准。
+
 ## 七个主任务
 
 唯一主路由是 onboarding、positioning、topic、script、growth、review、monetization。一个请求包含多个动作时，以用户要求的最终完整交付物为准。例如“围绕这个方向选题并写稿”路由到 script，并在胶囊内做最小选题校验；不能先读 topic 再读 script。只有用户明确要求两个独立完整交付物时才顺序执行。

@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "2.0.1"
+VERSION = "2.1.0"
 PUBLIC_DOCS = [
     "README.md",
     "README.en.md",
@@ -31,7 +31,7 @@ class ReleaseContractTests(unittest.TestCase):
                 self.assertIn(VERSION, self.read(relative))
 
     def test_expected_release_tag_matches_version(self):
-        self.assertEqual(f"v{self.read('VERSION').strip()}", "v2.0.1")
+        self.assertEqual(f"v{self.read('VERSION').strip()}", "v2.1.0")
 
     def test_openai_metadata_matches_unified_entry(self):
         text = self.read("agents/openai.yaml")

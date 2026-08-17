@@ -50,7 +50,7 @@ class I18nContractTests(unittest.TestCase):
         for relative in READMES:
             text = self.read(relative)
             with self.subTest(relative=relative):
-                self.assertIn("2.0.1", text)
+                self.assertIn("2.1.0", text)
                 self.assertIn(INSTALL, text)
                 self.assertIn("--agent codex --skill ip-strategist -y", text.replace("\\\n", " "))
                 self.assertIn("--list", text)
