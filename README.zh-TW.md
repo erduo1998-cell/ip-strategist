@@ -4,7 +4,7 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [繁體中文](README.zh-TW.md)
 
-[![Version 2.0.1](https://img.shields.io/badge/version-2.0.1-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![Tests 115](https://img.shields.io/badge/tests-115%20checks-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
+[![Version 2.1.0](https://img.shields.io/badge/version-2.1.0-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![Tests 129](https://img.shields.io/badge/tests-129%20checks-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
 
 **支援 Codex、Claude Code 與其他支援 Agent Skills 的宿主。** 自然語言是通用入口；宿主支援時也可使用 `/ip-strategist`。
 
@@ -79,7 +79,7 @@ Agent 會先說明保存位置與隱私邊界並取得一次同意，再以六�
 
 ## 可複核發布門
 
-`SKILL.md` 9,225 bytes；含 6,000-byte 狀態摘要上限的最大預設路徑 22,745 bytes；預設 1 個膠囊；狀態摘要不超過 6,000 bytes；115 項自動化測試已執行（1 項可選線上比對跳過）；11 類隔離成品測試；4 個檔案優先行為會話；五種公開語言。
+`SKILL.md` 10,384 bytes；含 6,000-byte 狀態摘要上限的最大預設路徑 24,371 bytes；預設 1 個膠囊；狀態摘要不超過 6,000 bytes；129 項自動化測試已執行（1 項可選線上比對跳過）；v2.1 七類任務均有 2026-08-17 的 fresh-agent 證據；檔案優先歷史基線為 2026-08-13 的 4 個乾淨會話；五種公開語言。每份結果都標明實際覆蓋範圍，未測試的觀察案例不記為通過。
 
 ## 安裝
 

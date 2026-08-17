@@ -5,10 +5,10 @@
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [繁體中文](README.zh-TW.md)
 
 <p>
-  <a href="VERSION"><img alt="Version 2.0.1" src="https://img.shields.io/badge/version-2.0.1-286A51?style=flat-square"></a>
+  <a href="VERSION"><img alt="Version 2.1.0" src="https://img.shields.io/badge/version-2.1.0-286A51?style=flat-square"></a>
   <a href="https://skills.sh/erduo1998-cell/ip-strategist"><img alt="skills.sh" src="https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square"></a>
   <a href="LICENSE"><img alt="CC BY-NC 4.0" src="https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square"></a>
-  <a href="https://github.com/erduo1998-cell/ip-strategist/actions"><img alt="Tests 115" src="https://img.shields.io/badge/tests-115%20checks-286A51?style=flat-square"></a>
+  <a href="https://github.com/erduo1998-cell/ip-strategist/actions"><img alt="Tests 129" src="https://img.shields.io/badge/tests-129%20checks-286A51?style=flat-square"></a>
 </p>
 
 **支持 Codex、Claude Code，以及其他支持 Agent Skills 的宿主。** 自然语言是通用入口；宿主支持时也可以使用 `/ip-strategist`。
@@ -111,18 +111,18 @@ Agent 会先说明档案保存位置和隐私边界，取得一次同意后开�
 
 ## 可复核的发布门
 
-| 项目 | v2.0.1 结果 |
+| 项目 | v2.1.0 结果 |
 | --- | ---: |
-| `SKILL.md` | 9,225 bytes |
-| 最大默认任务路径（含 6,000-byte 状态摘要上限） | 22,745 bytes |
+| `SKILL.md` | 10,384 bytes |
+| 最大默认任务路径（含 6,000-byte 状态摘要上限） | 24,371 bytes |
 | 默认加载胶囊 | 1 个 |
 | 状态摘要上限 | 6,000 bytes |
-| 自动化测试 | 115 项运行，1 项可选在线比对跳过 |
-| 隔离成品门 | 11 类真实任务通过 |
-| 档案优先行为门 | 4 个干净会话全部通过 |
+| 自动化测试 | 129 项运行，1 项可选在线比对跳过 |
+| v2.1 Fresh 行为门 | 七类任务均有 2026-08-17 干净证据 |
+| 档案优先历史基线 | 2026-08-13 的 4 个干净会话通过 |
 | 公开语言 | 简中、英语、日语、韩语、繁中 |
 
-这些数字约束上下文负担，不冒充成品质量；定位、选题、写稿、增长、复盘、变现和建档还分别经过互不共享上下文的干净 Agent 测试。
+这些数字约束上下文负担，不冒充成品质量；定位、选题、写稿、增长、复盘、变现和建档分别有 2026-08-17 的干净 Agent 证据。每份结果都标明真实覆盖边界，未测试的观察场景不记为通过。
 
 ## 安装
 

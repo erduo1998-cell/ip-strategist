@@ -20,9 +20,34 @@ TASKS = (
     "onboarding", "positioning", "topic", "script", "growth", "review",
     "monetization",
 )
+BUSINESS_TASKS = TASKS[1:]
 MAX_OUTPUT_BYTES = 6000
 PLACEHOLDERS = {
     "", "-", "--", "—", "待填", "待诊断", "留空", "待定", "未知", "TBD",
+}
+REVIEW_SIGNAL_LABELS = (
+    "本批主验证目标",
+    "账号相对基线与本批偏差",
+    "主页访问 / 关注转化",
+    "主页访问/关注转化",
+    "合格申请 / 业务线索",
+    "合格申请/业务线索",
+    "合格线索 / 业务申请",
+    "合格线索/业务申请",
+    "搜索 / 长尾增量",
+    "搜索/长尾增量",
+    "系列相邻集表现",
+    "新粉留存",
+)
+
+# These dossier fields form the shared strategic input inherited by every
+# formal business task.  They remain source data: this script does not infer
+# a persona, positioning, conflict, or any other semantic conclusion.
+COMMON_DIRECTION_FIELDS = {
+    "定位锚点", "一句话定位", "90 天唯一主要目标",
+    "目标用户的具体状态", "用户的核心问题", "人设", "当前价值",
+    "未来价值", "信任依据", "当前主识别点", "当前主行为",
+    "变现方向或长期用途", "变现方向", "人设 / 伦理 / 隐私红线",
 }
 
 TASK_FIELDS = {
@@ -102,13 +127,19 @@ def _read_text(path, max_bytes=2 * 1024 * 1024):
 
 def _is_data(value):
     value = (value or "").strip().strip("[]【】 ")
-    return value not in PLACEHOLDERS and not value.startswith("待填")
+    if value in PLACEHOLDERS or value.startswith("待填"):
+        return False
+    if value == "以上只选一个作为当前阶段主识别点":
+        return False
+    if re.match(r"^一句话(?:结论|猜想)\]?[｜|]验证次数：N[｜|]", value):
+        return False
+    return True
 
 
 def _quoted(value, limit=420):
     """Render user prose as one JSON string literal, never as Markdown syntax."""
     normalized = re.sub(r"\s+", " ", str(value or "")).strip()
-    if len(normalized) > limit:
+    if limit is not None and len(normalized) > limit:
         normalized = normalized[: limit - 1].rstrip() + "…"
     return json.dumps(normalized, ensure_ascii=False)
 
@@ -154,13 +185,75 @@ def _clean_data_lines(text, keywords=(), limit=5):
             continue
         if set(line.strip("| ")) <= set("-: "):
             continue
-        if any(marker in line for marker in ("填写指引", "待填", "例：", "示例：")):
+        if any(marker in line for marker in (
+            "填写指引", "待填", "例：", "示例：",
+            "一句话结论]｜验证次数：N", "一句话猜想]｜验证次数：N",
+            "以上只选一个作为当前阶段主识别点",
+        )):
             continue
-        compact = re.sub(r"^[\-*+\s]+", "", line)
+        compact = re.sub(r"^[\-+\s]+", "", line)
+        compact = re.sub(r"^\*\*([^*]+)\*\*[：:]\s*", r"\1：", compact)
+        compact = re.sub(r"^[*+\s]+", "", compact)
         if keywords and not any(word in compact for word in keywords):
             continue
         if _is_data(compact):
             result.append(compact)
+        if len(result) >= limit:
+            break
+    return result
+
+
+def _series_rows(text, limit=4):
+    """Read old five-column and future extended series rows as opaque data."""
+    result = []
+    for raw in (text or "").splitlines():
+        line = raw.strip()
+        if not line.startswith("|"):
+            continue
+        cells = [cell.strip() for cell in line.strip("|").split("|")]
+        if not cells or cells[0] in ("系列名", "项目名", ""):
+            continue
+        if all(set(cell) <= set("-: ") for cell in cells):
+            continue
+        result.append(line)
+        if len(result) >= limit:
+            break
+    return result
+
+
+def _data_snapshot_rows(text, limit=3):
+    """Select actual recent-content rows, never table headers or separators."""
+    result = []
+    for raw in (text or "").splitlines():
+        line = raw.strip()
+        if not line.startswith("|"):
+            continue
+        cells = [cell.strip() for cell in line.strip("|").split("|")]
+        if not cells or cells[0] in ("标题", ""):
+            continue
+        if all(set(cell) <= set("-: ") for cell in cells):
+            continue
+        result.append(line)
+        if len(result) >= limit:
+            break
+    return result
+
+
+def _review_signal_rows(text, limit=6):
+    """Select allowlisted growth/continuity signals without interpreting them."""
+    result = []
+    pattern = re.compile(r"^-\s*\*\*([^*]+)\*\*[：:]\s*(.*)$")
+    for raw in (text or "").splitlines():
+        match = pattern.match(raw.strip())
+        if not match:
+            continue
+        label = match.group(1).strip()
+        value = match.group(2).strip()
+        if not any(label.startswith(allowed) for allowed in REVIEW_SIGNAL_LABELS):
+            continue
+        if not _is_data(value):
+            continue
+        result.append("%s：%s" % (label, value))
         if len(result) >= limit:
             break
     return result
@@ -218,14 +311,34 @@ def _task_extras(text, task):
         "topic": ("内容支柱", "选题库"),
         "script": ("人设红线（对外内容的语气闸门）", "内容支柱"),
         "growth": ("账号记忆资产", "系列资产", "数据快照区（动态）"),
-        "review": ("数据快照区（动态）",),
-        "monetization": ("变现",),
+        "review": (),
     }
     lines = []
     for heading in headings.get(task, ()):
         level = 2 if heading == "数据快照区（动态）" else 3
-        lines.extend(_clean_data_lines(_section(text, heading, level), limit=4))
+        area = _section(text, heading, level)
+        if not area and heading == "数据快照区（动态）":
+            area = _section(text, "三、数据快照区（动态）", level)
+        if heading == "系列资产":
+            lines.extend(_series_rows(area, limit=4))
+        elif heading == "数据快照区（动态）":
+            lines.extend(_data_snapshot_rows(area, limit=3))
+        else:
+            lines.extend(_clean_data_lines(area, limit=4))
     return lines[:7]
+
+
+def _review_data(text):
+    area = _section(text, "数据快照区（动态）", 2)
+    if not area:
+        area = _section(text, "三、数据快照区（动态）", 2)
+    rows = _data_snapshot_rows(area, limit=3)
+    lines = [_line("recent_content", row, limit=300) for row in rows]
+    lines.extend(
+        _line("growth_signal", row, limit=240)
+        for row in _review_signal_rows(area, limit=6)
+    )
+    return lines
 
 
 def _contracts(workdir):
@@ -274,8 +387,144 @@ def _contract_state(contracts, today):
     return pending[:3], reviews[:3], overdue[:3]
 
 
-def _line(label, value):
-    return "- %s: %s" % (label, _quoted(value))
+def _line(label, value, limit=420):
+    return "- %s: %s" % (label, _quoted(value, limit=limit))
+
+
+def _machine_line(label, value):
+    """Render a machine-consumed value without lossy truncation."""
+    return "- %s: %s" % (label, json.dumps(str(value), ensure_ascii=False))
+
+
+def _labeled_values(fields, labels):
+    result = []
+    seen = set()
+    for label in labels:
+        value = fields.get(label, "")
+        if _is_data(value) and value not in seen:
+            result.append("%s：%s" % (label, value))
+            seen.add(value)
+    return "；".join(result)
+
+
+def _verified_content_learning(text):
+    area = _section(
+        text,
+        "A. 内容认知（这条内容打法管不管用 · 写进本区，通用者由维护者 curated）",
+    )
+    verified = False
+    for raw in area.splitlines():
+        line = raw.strip()
+        if "已验证" in line and (line.startswith("**") or line.startswith("#")):
+            verified = True
+            continue
+        if ("待验证" in line or "已证伪" in line) and (
+            line.startswith("**") or line.startswith("#")
+        ):
+            verified = False
+            continue
+        if verified:
+            cleaned = _clean_data_lines(line, limit=1)
+            if cleaned:
+                return cleaned[0]
+    return ""
+
+
+def _shared_evidence_inputs(text, limit=3):
+    """Return fixed evidence rows without task-keyword filtering."""
+    rows = []
+    for line in _section(text, "依据账本").splitlines():
+        if not line.strip().startswith("|"):
+            continue
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if len(cells) < 4 or cells[0] in ("", "结论"):
+            continue
+        if cells[1] not in ("已确认事实", "暂定假设", "未知"):
+            continue
+        rows.append(" | ".join(cells[:4]))
+        if len(rows) >= limit:
+            break
+    return rows
+
+
+def _direction_inputs(text, fields, lifecycle_status):
+    """Compile fixed, read-only dossier inputs for the runtime snapshot.
+
+    Values are copied or safely compressed from existing dossier fields.  A
+    missing value stays unknown; semantic synthesis belongs to the agent and
+    is never persisted by this script.
+    """
+    pillars = _clean_data_lines(_section(text, "内容支柱"), limit=3)
+    if not pillars:
+        learned_engine = _verified_content_learning(text)
+        if learned_engine:
+            pillars = [learned_engine]
+    memory = _state_value(text, "当前主识别点")
+    core_thesis_inputs = _labeled_values(
+        fields, ("定位锚点", "一句话定位", "90 天唯一主要目标")
+    )
+    business_inputs = _labeled_values(
+        fields, ("当前主行为", "变现方向或长期用途", "变现方向")
+    )
+    tension_evidence = []
+    user_problem = fields.get("用户的核心问题", "")
+    if _is_data(user_problem):
+        tension_evidence.append("用户核心问题：%s" % user_problem)
+    tension_evidence.extend(_shared_evidence_inputs(text))
+
+    values = (
+        ("core_thesis_inputs", core_thesis_inputs),
+        ("audience_moment", fields.get("目标用户的具体状态", "")),
+        ("relationship_posture", fields.get("人设", "")),
+        ("core_tension_evidence", "；".join(tension_evidence)),
+        ("current_value", fields.get("当前价值", "")),
+        ("future_value", fields.get("未来价值", "")),
+        ("trust_engine", fields.get("信任依据", "")),
+        ("content_engine", "；".join(pillars)),
+        ("primary_memory_asset", memory),
+        ("business_destination_inputs", business_inputs),
+        ("red_lines", fields.get("人设 / 伦理 / 隐私红线", "")),
+    )
+    missing = [label for label, value in values if not _is_data(value)]
+    direction_ready = lifecycle_status in ("provisional", "confirmed") and not missing
+    lines = [
+        "- direction_status: %s" % ("ready" if direction_ready else "partial"),
+    ]
+    for label, value in values:
+        if _is_data(value):
+            limit = 180 if label in (
+                "core_thesis_inputs", "core_tension_evidence",
+                "business_destination_inputs",
+            ) else 120
+            lines.append(_line(label, value, limit=limit))
+        else:
+            lines.append("- %s: unknown" % label)
+    lines.append(_line("missing_dimensions", ", ".join(missing), limit=240)
+                 if missing else "- missing_dimensions: none")
+    return lines
+
+
+def _direction_source_values(text, fields):
+    """Values already represented in the shared block, for task de-duplication."""
+    values = {
+        value for label, value in fields.items()
+        if label in COMMON_DIRECTION_FIELDS and _is_data(value)
+    }
+    values.update(_shared_evidence_inputs(text))
+    pillars = _clean_data_lines(_section(text, "内容支柱"), limit=3)
+    values.update(pillars)
+    memory = _state_value(text, "当前主识别点")
+    if _is_data(memory):
+        values.add(memory)
+    if not pillars:
+        learned = _verified_content_learning(text)
+        if _is_data(learned):
+            values.add(learned)
+    return values
+
+
+def _already_in_direction(value, direction_values):
+    return value in direction_values
 
 
 def _render_limited(sections, max_bytes):
@@ -306,6 +555,8 @@ def _render_limited(sections, max_bytes):
                 output.append(line)
                 kept += 1
             else:
+                if title == "next" and line.startswith("- contract_to_open:"):
+                    raise ValueError("摘要预算无法容纳完整 contract_to_open 机器指针")
                 omitted += 1
         if not kept:
             output.append("- omitted: budget")
@@ -372,19 +623,30 @@ def build_context(workdir, task, max_bytes=MAX_OUTPUT_BYTES, today=None):
             _line("invalid_onboarding_step", raw_step),
         ]))
 
+    has_shared_direction = status in ("provisional", "confirmed") and task in BUSINESS_TASKS
+    if has_shared_direction:
+        sections.append(("shared_direction_input", _direction_inputs(text, fields, status)))
+    if has_shared_direction and effective_task == "review":
+        review_lines = _review_data(text)
+        sections.append(("review_data", review_lines or ["- recent_content: none"]))
+
     selected = []
     for label in TASK_FIELDS[effective_task]:
-        if label in fields:
+        if label in fields and (not has_shared_direction or label not in COMMON_DIRECTION_FIELDS):
             selected.append(_line(label, fields[label]))
     sections.append(("task_relevant_profile", selected or ["- known_profile: none"]))
 
     knowledge = []
+    direction_values = _direction_source_values(text, fields) if has_shared_direction else set()
     for value in _evidence(text, effective_task):
-        knowledge.append(_line("evidence", value))
+        if not _already_in_direction(value, direction_values):
+            knowledge.append(_line("evidence", value))
     for value in _learnings(text, effective_task):
-        knowledge.append(_line("learning", value))
+        if not _already_in_direction(value, direction_values):
+            knowledge.append(_line("learning", value))
     for value in _task_extras(text, effective_task):
-        knowledge.append(_line("task_state", value))
+        if not _already_in_direction(value, direction_values):
+            knowledge.append(_line("task_state", value))
     sections.append(("verified_and_unverified_knowledge", knowledge or ["- task_knowledge: none"]))
 
     today = today or datetime.date.today()
@@ -406,7 +668,21 @@ def build_context(workdir, task, max_bytes=MAX_OUTPUT_BYTES, today=None):
         candidates = overdue or reviews
         if candidates:
             target = os.path.abspath(candidates[0][3])
-    sections.append(("next", [_line("contract_to_open", target)] if target else ["- contract_to_open: null"]))
+    sections.append(("next", [_machine_line("contract_to_open", target)] if target else ["- contract_to_open: null"]))
+    priority = {
+        "routing": 0,
+        "lifecycle": 1,
+        "state_warning": 2,
+        "next": 3,
+        "shared_direction_input": 4,
+        "review_data": 5,
+        "contract_queue": 6,
+    }
+    sections = sorted(
+        enumerate(sections),
+        key=lambda item: (priority.get(item[1][0], 20), item[0]),
+    )
+    sections = [section for _, section in sections]
     return _render_limited(sections, max_bytes)
 
 

@@ -1,6 +1,6 @@
 # ip-strategist v2 排障
 
-先确认根目录 [VERSION](VERSION) 显示 `2.0.1`，并在修改安装目录后新建会话。当前会话不会热重载新版 Skill。
+先确认根目录 [VERSION](VERSION) 显示 `2.1.0`，并在修改安装目录后新建会话。当前会话不会热重载新版 Skill。
 
 ## 1. Skill 没有触发
 
