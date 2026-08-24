@@ -72,6 +72,10 @@ class TestIpUpdate(unittest.TestCase):
     def _commands(self, runner):
         return [call[0] for call in runner.calls]
 
+    def _assert_installer_called(self, runner):
+        command_tails = [command[1:] for command in self._commands(runner)]
+        self.assertIn(list(ip_update.INSTALL_COMMAND[1:]), command_tails)
+
     def test_official_git_fast_forward(self):
         self._make_git()
         runner = FakeRunner(self.install, counts="0 2")
@@ -112,7 +116,7 @@ class TestIpUpdate(unittest.TestCase):
         runner = FakeRunner(self.install)
         result = ip_update.update_installation(self.install, runner=runner, lockfile=lockfile)
         self.assertEqual(result["install_type"], "skills-installer")
-        self.assertIn(list(ip_update.INSTALL_COMMAND), self._commands(runner))
+        self._assert_installer_called(runner)
 
     def test_non_git_unverified_copy_degrades_to_manual_instructions(self):
         lockfile = self._lock("someone-else/ip-strategist")
@@ -139,7 +143,7 @@ class TestIpUpdate(unittest.TestCase):
         result = ip_update.update_installation(install, runner=runner)
         self.assertEqual(result["install_type"], "skills-installer")
         self.assertEqual(result["lockfile"], lockfile)
-        self.assertIn(list(ip_update.INSTALL_COMMAND), self._commands(runner))
+        self._assert_installer_called(runner)
 
     def test_windows_managed_install_discovers_global_lock_candidate(self):
         install = r"C:\Users\lygit\.agents\skills\ip-strategist"
