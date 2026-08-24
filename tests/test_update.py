@@ -3,11 +3,13 @@
 
 import importlib.util
 import json
+import ntpath
 import os
 import shutil
 import subprocess
 import tempfile
 import unittest
+from unittest import mock
 
 
 SCRIPT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "scripts", "ip-update.py"))
@@ -138,6 +140,43 @@ class TestIpUpdate(unittest.TestCase):
         self.assertEqual(result["install_type"], "skills-installer")
         self.assertEqual(result["lockfile"], lockfile)
         self.assertIn(list(ip_update.INSTALL_COMMAND), self._commands(runner))
+
+    def test_windows_managed_install_discovers_global_lock_candidate(self):
+        install = r"C:\Users\lygit\.agents\skills\ip-strategist"
+        candidates = ip_update._lock_candidates(install, path_module=ntpath)
+        expected = ntpath.normpath(r"C:\Users\lygit\.agents\.skill-lock.json")
+        normalized = [ntpath.normpath(path) for path in candidates]
+        self.assertIn(expected, normalized)
+
+    def test_windows_installer_resolves_npx_cmd_before_running(self):
+        lockfile = self._lock()
+        runner = FakeRunner(self.install)
+        npx_cmd = r"C:\Program Files\nodejs\npx.CMD"
+        command = ip_update._installer_command(
+            os_name="nt", which=lambda _name: npx_cmd
+        )
+        self.assertEqual(command[0], npx_cmd)
+        with mock.patch.object(ip_update, "_installer_command", return_value=command):
+            result = ip_update.update_installation(
+                self.install, runner=runner, lockfile=lockfile
+            )
+        self.assertEqual(result["install_type"], "skills-installer")
+        self.assertIn(list(command), self._commands(runner))
+
+    def test_windows_installer_reports_missing_npx(self):
+        with self.assertRaisesRegex(ip_update.UpdateError, "未找到 npx.cmd"):
+            ip_update._installer_command(os_name="nt", which=lambda _name: None)
+
+    @unittest.skipUnless(os.name == "nt", "requires Windows command resolution")
+    def test_windows_resolved_npx_cmd_is_executable(self):
+        command = ip_update._installer_command()
+        completed = subprocess.run(
+            [command[0], "--version"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr or completed.stdout)
 
     def test_private_state_in_install_dir_is_never_opened_or_updated(self):
         private = os.path.join(self.install, "ip-dossier.md")

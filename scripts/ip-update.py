@@ -10,6 +10,7 @@ User dossier and contract data is never read, moved, or modified.
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 
@@ -88,27 +89,33 @@ def _git_install(install_dir, runner):
     return {"ok": True, "install_type": "git", "status": status, "branch": branch}
 
 
-def _lock_candidates(install_dir, lockfile=None):
+def _lock_candidates(install_dir, lockfile=None, path_module=os.path):
     if lockfile:
-        return [os.path.abspath(lockfile)]
+        return [path_module.abspath(lockfile)]
     candidates = []
-    cursor = os.path.abspath(install_dir)
+    cursor = path_module.abspath(install_dir)
+    normalized_install = path_module.normcase(path_module.normpath(cursor))
     while True:
         for container in (".agents/skills", ".claude/skills", ".codex/skills"):
-            managed_root = os.path.join(cursor, container)
+            managed_root = path_module.normcase(
+                path_module.normpath(path_module.join(cursor, container))
+            )
             try:
-                in_managed_root = os.path.commonpath(
-                    (os.path.abspath(install_dir), managed_root)
-                ) == managed_root
+                common_root = path_module.normcase(
+                    path_module.normpath(
+                        path_module.commonpath((normalized_install, managed_root))
+                    )
+                )
+                in_managed_root = common_root == managed_root
             except ValueError:
                 in_managed_root = False
             if in_managed_root:
                 candidates.extend((
-                    os.path.join(cursor, "skills-lock.json"),
-                    os.path.join(cursor, ".agents", ".skill-lock.json"),
+                    path_module.join(cursor, "skills-lock.json"),
+                    path_module.join(cursor, ".agents", ".skill-lock.json"),
                 ))
                 break
-        parent = os.path.dirname(cursor)
+        parent = path_module.dirname(cursor)
         if parent == cursor:
             break
         cursor = parent
@@ -129,6 +136,15 @@ def _official_lock(lockfiles):
     return None
 
 
+def _installer_command(os_name=os.name, which=shutil.which):
+    if os_name != "nt":
+        return INSTALL_COMMAND
+    executable = which(INSTALL_COMMAND[0])
+    if not executable:
+        raise UpdateError("Windows 上未找到 npx.cmd；请确认 Node.js/npm 已安装并已加入 PATH")
+    return (executable,) + INSTALL_COMMAND[1:]
+
+
 def _non_git_install(install_dir, runner, lockfile=None):
     official_lock = _official_lock(_lock_candidates(install_dir, lockfile))
     if not official_lock:
@@ -138,7 +154,7 @@ def _non_git_install(install_dir, runner, lockfile=None):
             "status": "manual_replacement_required",
             "message": "未证明此副本由官方 skills 安装器管理；请整体替换 Skill 目录，不要只替换 SKILL.md。",
         }
-    _run(INSTALL_COMMAND, None, runner)
+    _run(_installer_command(), None, runner)
     return {
         "ok": True,
         "install_type": "skills-installer",
