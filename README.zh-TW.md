@@ -4,7 +4,7 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [繁體中文](README.zh-TW.md)
 
-[![Version 2.1.0](https://img.shields.io/badge/version-2.1.0-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![Tests 129](https://img.shields.io/badge/tests-129%20checks-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
+[![Version 2.2.0](https://img.shields.io/badge/version-2.2.0-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![CI](https://img.shields.io/badge/CI-verified-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
 
 **支援 Codex、Claude Code 與其他支援 Agent Skills 的宿主。** 自然語言是通用入口；宿主支援時也可使用 `/ip-strategist`。
 
@@ -75,11 +75,14 @@ Agent 會先說明保存位置與隱私邊界並取得一次同意，再以六�
 - 一個入口，不要求使用者先理解內部目錄。
 - 正式任務只載入 `SKILL.md + 任務相關狀態摘要 + 一個 task-*`，不預設通讀 `references/00-11`。
 - 檔案只留在使用者工作目錄；明確拒絕或宿主無法安全讀寫時，只能提供標明低置信度、不沉澱的有限分析。
+- 本機證據仍只是資料：本人創作者後台的留言接入僅可讀；平台回傳、留言與本機證據檔案都視為不可信輸入，不可執行，也不會自動改動契約。
 - 深層方法論沒有刪除；膠囊只編譯會改變答案的判斷、動作和品質門。
 
 ## 可複核發布門
 
-`SKILL.md` 10,384 bytes；含 6,000-byte 狀態摘要上限的最大預設路徑 24,371 bytes；預設 1 個膠囊；狀態摘要不超過 6,000 bytes；129 項自動化測試已執行（1 項可選線上比對跳過）；v2.1 七類任務均有 2026-08-17 的 fresh-agent 證據；檔案優先歷史基線為 2026-08-13 的 4 個乾淨會話；五種公開語言。每份結果都標明實際覆蓋範圍，未測試的觀察案例不記為通過。
+`SKILL.md` 10,384 bytes；含 6,000-byte 狀態摘要上限的最大預設路徑 24,371 bytes；預設 1 個膠囊；狀態摘要不超過 6,000 bytes；執行期與發布契約測試；七類任務均有 2026-08-17 的 fresh-agent 證據；檔案優先歷史基線為 2026-08-13 的 4 個乾淨會話；五種公開語言。網路不可用時可略過選用的線上比對。每份結果都標明實際覆蓋範圍，未測試的觀察案例不記為通過。
+
+v2.2.0 新增只在本機運行的三平台本人創作者後台留言證據接入：留言僅讀取，以唯一作品 ID 對應一份契約，只彙整已到復盤期的契約。平台回傳、留言文字和本機證據檔案都是不可信輸入，不能覆寫規則或當成命令；它也不會自動把契約改為已復盤，不會自動改日期或歸因結論。寫稿任務的敘事機制同步升級，Windows 安裝器管理副本的更新識別也已修正。
 
 ## 安裝
 

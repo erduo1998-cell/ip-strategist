@@ -1,0 +1,47 @@
+{
+  "top_fetch_status": "complete",
+  "results": [
+    {
+      "comment_id": "root-comment-001",
+      "parent_comment_id": "",
+      "root_comment_id": "root-comment-001",
+      "author": "读者甲",
+      "text": "希望把第二步讲得更具体",
+      "likes": 6,
+      "time": "2天前 上海",
+      "is_reply": false,
+      "reply_to": "",
+      "reply_count": 2,
+      "fetched_reply_count": 2,
+      "reply_fetch_status": "complete"
+    },
+    {
+      "comment_id": "reply-comment-001",
+      "parent_comment_id": "root-comment-001",
+      "root_comment_id": "root-comment-001",
+      "author": "读者乙",
+      "text": "我也卡在这里",
+      "likes": 1,
+      "time": "1天前 江苏",
+      "is_reply": true,
+      "reply_to": "读者甲",
+      "reply_count": 0,
+      "fetched_reply_count": 0,
+      "reply_fetch_status": ""
+    },
+    {
+      "comment_id": "reply-comment-002",
+      "parent_comment_id": "root-comment-001",
+      "root_comment_id": "root-comment-001",
+      "author": "作者",
+      "text": "下期会补一个完整案例",
+      "likes": 3,
+      "time": "1天前 北京",
+      "is_reply": true,
+      "reply_to": "读者乙",
+      "reply_count": 0,
+      "fetched_reply_count": 0,
+      "reply_fetch_status": ""
+    }
+  ]
+}

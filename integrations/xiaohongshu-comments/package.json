@@ -1,0 +1,17 @@
+{
+  "name": "@ip-strategist/xiaohongshu-comments-local",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "setup": "node src/setup.mjs",
+    "sync": "node src/sync.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@jackwener/opencli": "1.8.7"
+  }
+}
