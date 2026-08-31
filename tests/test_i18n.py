@@ -4,6 +4,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 READMES = [
     "README.md",
     "README.en.md",
@@ -50,7 +51,7 @@ class I18nContractTests(unittest.TestCase):
         for relative in READMES:
             text = self.read(relative)
             with self.subTest(relative=relative):
-                self.assertIn("2.1.0", text)
+                self.assertIn(VERSION, text)
                 self.assertIn(INSTALL, text)
                 self.assertIn("--agent codex --skill ip-strategist -y", text.replace("\\\n", " "))
                 self.assertIn("--list", text)

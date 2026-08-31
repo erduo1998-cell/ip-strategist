@@ -1,0 +1,22 @@
+{
+  "data": {
+    "total": 1,
+    "note_infos": [
+      {
+        "id": "68aabbcc0000000011223344",
+        "title": "合成测试笔记",
+        "post_time": 1700000000,
+        "read_count": 1200,
+        "imp_count": 3600,
+        "like_count": 80,
+        "fav_count": 35,
+        "comment_count": 3,
+        "share_count": 11,
+        "increase_fans_count": 7,
+        "view_time_avg": 18.5
+      }
+    ]
+  },
+  "success": true,
+  "code": 0
+}

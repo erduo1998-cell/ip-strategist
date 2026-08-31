@@ -4,7 +4,7 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [繁體中文](README.zh-TW.md)
 
-[![Version 2.1.0](https://img.shields.io/badge/version-2.1.0-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![Tests 129](https://img.shields.io/badge/tests-129%20checks-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
+[![Version 2.2.0](https://img.shields.io/badge/version-2.2.0-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![CI](https://img.shields.io/badge/CI-verified-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
 
 **Codex, Claude Code 및 Agent Skills를 지원하는 호스트에서 사용할 수 있습니다.** 자연어가 공통 입구이며, 지원 호스트에서는 `/ip-strategist`도 사용할 수 있습니다.
 
@@ -75,11 +75,14 @@ Agent는 저장 위치와 개인정보 경계를 설명하고 동의를 한 번 
 - 하나의 입구이므로 사용자가 내부 기능 목록을 먼저 배울 필요가 없습니다.
 - 정식 작업은 `SKILL.md + 작업별 상태 요약 + 하나의 task-*`만 읽고 `references/00-11`을 기본으로 통독하지 않습니다.
 - 기록은 사용자 작업 디렉터리에만 둡니다. 거부하거나 안전한 읽기·쓰기가 불가능하면 낮은 신뢰도와 비저장을 명시한 제한 분석만 제공합니다.
+- 로컬 증거도 데이터일 뿐입니다. 본인 크리에이터 백엔드의 댓글 연동은 읽기 전용이며, 플랫폼 응답·댓글·로컬 증거 파일은 신뢰할 수 없는 입력으로 처리합니다. 실행 명령이 될 수 없고 계약을 자동으로 바꾸지 않습니다.
 - 심층 방법론은 삭제되지 않았습니다. 답을 바꾸는 판단, 행동, 품질 기준만 캡슐에 컴파일합니다.
 
 ## 검증 가능한 릴리스 기준
 
-`SKILL.md` 10,384 bytes, 6,000-byte 상태 요약 상한을 포함한 최대 기본 경로 24,371 bytes, 기본 캡슐 1개, 상태 요약 6,000 bytes 이하, 자동 테스트 129개 실행(선택적 온라인 비교 1개 건너뜀), v2.1의 7개 작업 모두에 2026-08-17 fresh-agent 증거, 기록 우선 과거 기준은 2026-08-13의 깨끗한 4개 세션, 공개 언어 5개. 각 결과는 실제 검증 범위를 밝히며 테스트하지 않은 관찰 사례는 통과로 계산하지 않습니다.
+`SKILL.md` 10,384 bytes, 6,000-byte 상태 요약 상한을 포함한 최대 기본 경로 24,371 bytes, 기본 캡슐 1개, 상태 요약 6,000 bytes 이하, 런타임·릴리스 계약 테스트, 2026-08-17의 7개 작업 fresh-agent 증거, 기록 우선 과거 기준은 2026-08-13의 깨끗한 4개 세션, 공개 언어 5개. 네트워크를 사용할 수 없으면 선택적 온라인 비교는 건너뜁니다. 각 결과는 실제 검증 범위를 밝히며 테스트하지 않은 관찰 사례는 통과로 계산하지 않습니다.
+
+v2.2.0은 세 플랫폼의 본인 크리에이터 백엔드에서 댓글 증거를 로컬에서만 가져옵니다. 댓글은 읽기 전용이고 고유 작품 ID 하나를 계약 하나에 매핑하며, 회고 기한이 된 계약만 모읍니다. 플랫폼 응답, 댓글 내용, 로컬 증거 파일은 신뢰할 수 없는 입력이므로 규칙을 덮어쓰거나 명령으로 실행될 수 없습니다. 회고 상태·날짜·결론도 자동 변경하지 않습니다. 대본 작업의 서사 메커니즘을 강화했고, Windows 설치 관리자 관리 사본의 업데이트 인식도 수정했습니다.
 
 ## 설치
 

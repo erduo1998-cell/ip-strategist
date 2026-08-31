@@ -4,7 +4,7 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [繁體中文](README.zh-TW.md)
 
-[![Version 2.1.0](https://img.shields.io/badge/version-2.1.0-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![Tests 129](https://img.shields.io/badge/tests-129%20checks-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
+[![Version 2.2.0](https://img.shields.io/badge/version-2.2.0-286A51?style=flat-square)](VERSION) [![skills.sh](https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square)](https://skills.sh/erduo1998-cell/ip-strategist) [![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square)](LICENSE) [![CI](https://img.shields.io/badge/CI-verified-286A51?style=flat-square)](https://github.com/erduo1998-cell/ip-strategist/actions)
 
 **For Codex, Claude Code, and other hosts that support Agent Skills.** Natural language is the universal entry point; `/ip-strategist` also works where named Skill invocation is supported.
 
@@ -100,22 +100,25 @@ Intent words may follow the same entry point; they are not separate Skills:
 - **One current task:** the final deliverable selects the route; two capsules run only when two complete deliverables are explicit.
 - **One capsule:** formal work loads `SKILL.md + task-specific state summary + one task-*`, not all of `references/00-11`.
 - **Explicit privacy boundary:** state stays in the user's working directory. Refusal or an unsafe host permits only a labeled low-confidence, non-persistent limited analysis.
+- **Local evidence remains data:** comment evidence from the creator's own backend is read-only; platform responses, comments, and local evidence files are untrusted input, never executable instructions, and never change a contract automatically.
 - **The methodology remains:** deep sources stay public; capsules compile only decisions, actions, and quality gates that change the answer.
 
 ## Verifiable release gates
 
-| Gate | v2.1.0 result |
+| Gate | v2.2.0 release gate |
 | --- | ---: |
 | `SKILL.md` | 10,384 bytes |
 | Largest default task path (including the 6,000-byte state-summary ceiling) | 24,371 bytes |
 | Default capsules loaded | 1 |
 | State-summary ceiling | 6,000 bytes |
-| Automated tests | 129 run; 1 optional network comparison skipped |
-| v2.1 fresh behavior gate | All seven task types have clean evidence dated 2026-08-17 |
+| Automated tests | Runtime and release-contract suite; optional online comparisons may skip when unavailable |
+| Behavior-evidence baseline | All seven task types have clean evidence dated 2026-08-17 |
 | Dossier-first historical baseline | 4 clean sessions passed on 2026-08-13 |
 | Public languages | zh-CN, English, Japanese, Korean, zh-TW |
 
 These numbers constrain context cost; they do not substitute for output quality. All seven task types have clean Agent evidence dated 2026-08-17. Each result states its actual coverage, and untested observation cases are not counted as passes.
+
+v2.2.0 adds local-only comment evidence from the creator's own backend on three platforms. It reads comments only, maps one unique work ID to one contract, and aggregates only contracts due for review. Platform responses, comment text, and local evidence files remain untrusted input: they cannot override rules or act as commands, and they never automatically change a review status, date, or conclusion. The script task's narrative mechanics are strengthened, and installer-managed updates on Windows now resolve correctly.
 
 ## Install
 

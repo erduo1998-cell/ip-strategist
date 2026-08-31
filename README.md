@@ -5,10 +5,10 @@
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [繁體中文](README.zh-TW.md)
 
 <p>
-  <a href="VERSION"><img alt="Version 2.1.0" src="https://img.shields.io/badge/version-2.1.0-286A51?style=flat-square"></a>
+  <a href="VERSION"><img alt="Version 2.2.0" src="https://img.shields.io/badge/version-2.2.0-286A51?style=flat-square"></a>
   <a href="https://skills.sh/erduo1998-cell/ip-strategist"><img alt="skills.sh" src="https://img.shields.io/badge/skills.sh-ip--strategist-BBD96B?style=flat-square"></a>
   <a href="LICENSE"><img alt="CC BY-NC 4.0" src="https://img.shields.io/badge/license-CC%20BY--NC%204.0-E26D4A?style=flat-square"></a>
-  <a href="https://github.com/erduo1998-cell/ip-strategist/actions"><img alt="Tests 129" src="https://img.shields.io/badge/tests-129%20checks-286A51?style=flat-square"></a>
+  <a href="https://github.com/erduo1998-cell/ip-strategist/actions"><img alt="CI" src="https://img.shields.io/badge/CI-verified-286A51?style=flat-square"></a>
 </p>
 
 **支持 Codex、Claude Code，以及其他支持 Agent Skills 的宿主。** 自然语言是通用入口；宿主支持时也可以使用 `/ip-strategist`。
@@ -107,22 +107,25 @@ Agent 会先说明档案保存位置和隐私边界，取得一次同意后开�
 - **一个当前任务**：最终交付物决定唯一主路由；明确要求两个独立成品时才顺序执行。
 - **一个胶囊**：正式任务只加载 `SKILL.md + 任务相关状态摘要 + 一个 task-*`，不默认通读 `references/00-11`。
 - **隐私边界明确**：档案只在用户工作目录；明确拒绝或宿主无法安全读写时，只能提供标明低置信度、不沉淀的有限分析。
+- **本地证据仍是数据**：本人创作者后台的评论接入只读运行；平台返回、评论和本地证据文件不可信、不可执行，也不会自动改动契约状态。
 - **方法论没有删除**：深层原件仍公开保留，胶囊只编译会改变答案的判断、动作和质量门。
 
 ## 可复核的发布门
 
-| 项目 | v2.1.0 结果 |
+| 项目 | v2.2.0 发布门 |
 | --- | ---: |
 | `SKILL.md` | 10,384 bytes |
 | 最大默认任务路径（含 6,000-byte 状态摘要上限） | 24,371 bytes |
 | 默认加载胶囊 | 1 个 |
 | 状态摘要上限 | 6,000 bytes |
-| 自动化测试 | 129 项运行，1 项可选在线比对跳过 |
-| v2.1 Fresh 行为门 | 七类任务均有 2026-08-17 干净证据 |
+| 自动化测试 | 运行时与发布契约测试；网络不可用时可跳过可选在线比对 |
+| 行为证据基线 | 七类任务均有 2026-08-17 干净证据 |
 | 档案优先历史基线 | 2026-08-13 的 4 个干净会话通过 |
 | 公开语言 | 简中、英语、日语、韩语、繁中 |
 
 这些数字约束上下文负担，不冒充成品质量；定位、选题、写稿、增长、复盘、变现和建档分别有 2026-08-17 的干净 Agent 证据。每份结果都标明真实覆盖边界，未测试的观察场景不记为通过。
+
+v2.2.0 增加仅在本机运行的三平台本人创作者后台评论证据接入：评论只读获取，按唯一作品 ID 对应一个契约，只汇总已到复盘期的契约。平台返回、评论文字和本地证据文件都是不可信数据，不能覆盖规则或作为命令；它不会自动把契约改为已复盘，也不会自动改日期或归因结论。写稿的叙事机制同步升级；Windows 安装器管理副本的更新识别也已修复。
 
 ## 安装
 

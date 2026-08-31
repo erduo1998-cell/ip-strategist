@@ -25,8 +25,13 @@ demo/remotion/out/
 # 创作者敏感数据（建议默认忽略，按需自行决定是否注释掉）
 ip-dossier.md
 ip-dossier.md.bak
+ip-dossier.md.bak*
 ip-dossier.md.tmp
 ip-contracts/
+ip-evidence/
+
+# 平台集成运行时依赖只在用户本机安装，不提交到公开仓库
+integrations/*/node_modules/
 
 # 例外：集成测试 fixture 需要提交到仓库
 !tests/fixtures/sample-workspace/ip-dossier.md
