@@ -8,7 +8,7 @@
 
 **For Codex, Claude Code, and other hosts that support Agent Skills.** Natural language is the universal entry point; `/ip-strategist` also works where named Skill invocation is supported.
 
-[Start in 30 seconds](#start-in-30-seconds) · [Watch the demo](#from-one-real-question-to-a-usable-result) · [Seven tasks](#seven-tasks) · [Install](#install) · [Update](#update) · [License](#license-and-commercial-permission)
+[Start in 30 seconds](#start-in-30-seconds) · [Watch the demo](#from-one-real-question-to-a-usable-result) · [Seven tasks](#seven-tasks) · [Install](#install) · [Update](#update) · [License](#license-and-commercial-permission) · [Membership & help](#membership-help)
 
 ![A creator and an AI IP coach focus on the current decision while complex methodology stays organized in the background](assets/ip-strategist-hero.webp)
 
@@ -105,10 +105,10 @@ Intent words may follow the same entry point; they are not separate Skills:
 
 ## Verifiable release gates
 
-| Gate | v2.2.0 release gate |
+| Check | Current source values |
 | --- | ---: |
-| `SKILL.md` | 10,384 bytes |
-| Largest default task path (including the 6,000-byte state-summary ceiling) | 24,371 bytes |
+| `SKILL.md` | 11,570 bytes |
+| Largest default task path (including the 6,000-byte state-summary ceiling) | 27,223 bytes |
 | Default capsules loaded | 1 |
 | State-summary ceiling | 6,000 bytes |
 | Automated tests | Runtime and release-contract suite; optional online comparisons may skip when unavailable |
@@ -172,6 +172,16 @@ This Skill handles IP positioning, content decisions, shot intent, and copy. It 
 From **v2.0.0**, the repository uses [CC BY-NC 4.0](LICENSE). Sharing and adaptation require attribution, a license link, and change notices; commercial use requires separate written permission.
 
 This project is **source-available for noncommercial use**, not OSI open-source software that permits commercial use. Copies of v1 already received under MIT retain those rights; v2 does not revoke them retroactively. See [NOTICE.md](NOTICE.md) and [SUPPORT.md](SUPPORT.md).
+
+<a id="membership-help"></a>
+
+## Membership & help
+
+Erduo’s **无限涌动 SURGE Seed Membership** offers lifetime membership status, project resources, video examples, ongoing updates, and text-based Q&A. You can also connect your own AI to the member resources you are entitled to use. It is an optional way to support your practice in positioning, content, and reviews; available materials and current benefits are listed on the website.
+
+[Explore membership](https://erduo.art/site/join) · [Register / sign in and purchase](https://login.erduo.art/purchase/checkout) · [Discuss custom services](https://erduo.art/site/business)
+
+Non-commercial self-service use does not require membership. Text-based Q&A excludes remote installation, hands-on engineering troubleshooting, and one-to-one done-for-you work. Existing 1v1 IP consulting and commercial permission remain separate; membership does not grant commercial rights. You can also contact the author through the WeChat QR code below. See [support and permissions](SUPPORT.md).
 
 ## Contact the author
 

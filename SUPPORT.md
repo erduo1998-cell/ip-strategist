@@ -1,16 +1,24 @@
 # 支持与授权
 
-项目自助使用、作者咨询服务和商业使用许可是三件不同的事。
+项目自助使用、种子会员、作者咨询服务和商业使用许可各自独立。
 
 ## 社区支持
 
 非商业使用不需要购买咨询。遇到问题请先查 [TROUBLESHOOTING.md](TROUBLESHOOTING.md) 和 [CHANGELOG.md](CHANGELOG.md)；可复现的缺陷、文档错误和安装问题请到 [GitHub Issues](https://github.com/erduo1998-cell/ip-strategist/issues) 提交，勿附私人档案、客户数据或凭证。
 
+## 种子会员（可选）
+
+作者耳朵的「无限涌动 SURGE」提供永久种子会员，包含项目资料、视频案例、持续更新和文字答疑，也支持将自己的 AI 接入有权使用的会员资料库。现有资料目录及最新权益以网站为准。
+
+[了解会员权益](https://erduo.art/site/join) · [注册／登录并购买](https://login.erduo.art/purchase/checkout) · [已是会员：进入资料库](https://login.erduo.art/studio/#library)
+
+非商业自助使用无需购买会员。文字答疑不包含远程安装、工程代排查或一对一代做；会员不自动包含 1v1 IP 咨询，也不自动授予商业使用权。需要定制服务可通过[服务页](https://erduo.art/site/business)联系作者评估范围与报价。
+
 ## 作者咨询服务（可选）
 
 作者耳总提供独立的 1v1 IP 咨询，可用于定位诊断、瓶颈突破与复盘归因。购买咨询只购买该次服务，**不会自动取得**本仓库的商业使用权。
 
-扫码联系，备注「ip-strategist 咨询」：
+可通过[服务页](https://erduo.art/site/business)联系作者，或扫码联系，备注「ip-strategist 咨询」：
 
 ![作者微信二维码](assets/wechat-qrcode.jpg)
 

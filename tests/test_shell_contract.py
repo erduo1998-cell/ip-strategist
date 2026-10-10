@@ -80,7 +80,7 @@ class TestShellContract(unittest.TestCase):
             "把原任务按用户原意记入“上次会话约定”作为建档后待办",
             "任何定位、选题、写稿、增长、复盘或变现任务都先路由到",
             "不得用三问微诊断、显式假设或通用建议冒充完整判断",
-            "无论用户提出什么新任务，都先从 `onboarding_step` 续完建档",
+            "无论用户提出什么新的 IP 业务任务，都先从 `onboarding_step` 续完建档",
             "档案为 `provisional` 或 `confirmed` 且校验通过时",
         ]:
             self.assertIn(phrase, text)
